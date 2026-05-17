@@ -107,13 +107,13 @@ export default function ShopByCategory() {
 
                 {/* Content */}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end z-30">
-                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <p className="text-[#eebf63] font-medium text-sm tracking-widest uppercase mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">{cat.desc}</p>
+                  <div className="transform translate-y-0 sm:translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <p className="text-[#eebf63] font-medium text-sm tracking-widest uppercase mb-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">{cat.desc}</p>
                     <h3 className="text-3xl font-serif text-white font-medium tracking-wide mb-6">{cat.title}</h3>
                     
                     {/* Action Button */}
                     <div className="overflow-hidden">
-                      <span className="flex items-center gap-2 text-white text-sm font-bold tracking-widest uppercase pb-1 border-b border-[#eebf63] transform translate-y-[150%] group-hover:translate-y-0 transition-transform duration-500 delay-150 hover:text-[#eebf63] inline-block">
+                      <span className="flex items-center gap-2 text-white text-sm font-bold tracking-widest uppercase pb-1 border-b border-[#eebf63] transform translate-y-0 sm:translate-y-[150%] group-hover:translate-y-0 transition-transform duration-500 delay-150 hover:text-[#eebf63] inline-block">
                         Explore Now <ArrowRight className="w-4 h-4 inline-block ml-1" />
                       </span>
                     </div>

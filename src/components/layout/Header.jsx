@@ -1,8 +1,17 @@
+"use client";
+import { useState } from 'react';
 import Link from 'next/link';
 import LiveRatesTicker from './LiveRatesTicker';
-import { Menu, Search, ShoppingBag, User, ChevronDown, ChevronRight } from 'lucide-react';
+import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, MessageCircle } from 'lucide-react';
 
 export default function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
+
+  const toggleMobileCategory = (cat) => {
+    setExpandedMobileCategory(expandedMobileCategory === cat ? null : cat);
+  };
+
   const categories = {
     'Gold Jewellery': {
       links: ['Rings', 'Chains', 'Necklaces', 'Temple Jewellery', 'Bridal Jewellery', 'Mangalsutra', 'Daily Wear', 'Earrings', 'Pendants', 'Bangles', 'Bracelets'],
@@ -39,7 +48,11 @@ export default function Header() {
         <div className="flex justify-between items-center py-4 md:py-5">
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
-            <button className="text-[#1f163b] p-2 hover:bg-[#1f163b]/5 rounded-lg transition-colors">
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="text-[#1f163b] p-2 hover:bg-[#1f163b]/5 rounded-lg transition-colors"
+              aria-label="Open menu"
+            >
               <Menu className="w-6 h-6" />
             </button>
           </div>
@@ -167,6 +180,119 @@ export default function Header() {
               <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
               <span className="absolute -top-1.5 -right-2 bg-[#1f163b] text-[#eebf63] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-lg border border-[#eebf63]/50">0</span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Drawer Overlay */}
+      <div 
+        className={`fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      >
+        <div 
+          className={`fixed inset-y-0 left-0 w-[85%] max-w-[320px] bg-[#110722] text-white shadow-[20px_0_50px_rgba(0,0,0,0.5)] flex flex-col z-50 border-r border-[#eebf63]/20 transition-transform duration-300 ease-out transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header of Mobile Menu */}
+          <div className="p-5 border-b border-white/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#3a225e] transform rotate-45 flex items-center justify-center border border-[#d4a54c]">
+                <div className="w-5 h-5 border border-[#d4a54c] flex items-center justify-center">
+                  <div className="w-2 h-2 bg-[#d4a54c] rounded-full"></div>
+                </div>
+              </div>
+              <div>
+                <h2 className="text-base font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none">Chamunda</h2>
+                <p className="text-[8px] text-gray-400 uppercase tracking-[0.25em] mt-1 font-semibold">Jewellers</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-[#eebf63] hover:text-white p-2 rounded-full bg-white/5 transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Menu Links */}
+          <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4">
+            <Link 
+              href="/" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-sm font-bold tracking-wider uppercase text-white hover:text-[#eebf63] py-2 border-b border-white/5 transition-colors"
+            >
+              Home
+            </Link>
+
+            {/* Categories Collapsible */}
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-widest text-[#eebf63] font-semibold mt-4">Collections</p>
+              {Object.entries(categories).map(([categoryName, data]) => {
+                const isExpanded = expandedMobileCategory === categoryName;
+                return (
+                  <div key={categoryName} className="border-b border-white/5 pb-2">
+                    <button 
+                      onClick={() => toggleMobileCategory(categoryName)}
+                      className="w-full flex items-center justify-between text-sm py-2 text-left font-medium text-gray-200 hover:text-white"
+                    >
+                      <span>{categoryName}</span>
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-[#eebf63]' : ''}`} />
+                    </button>
+                    
+                    {isExpanded && (
+                      <div className="pl-4 mt-2 space-y-2 animate-fade-in">
+                        {data.links.map(link => (
+                          <Link 
+                            key={link}
+                            href={link.toLowerCase() === 'necklaces' ? "/collection/necklaces" : link.toLowerCase() === 'rings' ? "/collection/rings" : "/collection"}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block text-sm text-gray-400 hover:text-[#eebf63] py-1 transition-colors"
+                          >
+                            {link}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Live Rates */}
+            <Link 
+              href="/live-rates" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-red-500 hover:text-red-400 py-3 border-b border-white/5 transition-colors"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+              </span>
+              LIVE RATES
+            </Link>
+          </div>
+
+          {/* Footer of Mobile Menu */}
+          <div className="p-5 bg-white/5 border-t border-white/10 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#eebf63]">
+                <Phone className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider font-light">Call Store</p>
+                <p className="text-xs text-white font-medium">+91 63672 46095</p>
+              </div>
+            </div>
+
+            <a 
+              href="https://wa.me/916367246095" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-full bg-[#25d366] hover:bg-[#20ba5a] text-white py-3 rounded-lg text-xs font-bold tracking-widest uppercase flex justify-center items-center gap-2 transition-all duration-300"
+            >
+              <MessageCircle className="w-4 h-4 fill-white" /> WHATSAPP INQUIRY
+            </a>
           </div>
         </div>
       </div>

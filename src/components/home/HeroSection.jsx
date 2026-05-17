@@ -145,7 +145,7 @@ export default function HeroSection() {
           </div>
           
           {/* Trust Badges */}
-          <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 text-white mt-12 border-t border-white/10 pt-8 w-max">
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-12 text-white mt-12 border-t border-white/10 pt-8 w-full max-w-lg">
             <div className="flex items-center gap-4 group/badge">
               <div className="p-2.5 rounded-full bg-white/5 border border-[#eebf63]/30 group-hover/badge:bg-[#eebf63]/10 transition-colors duration-300">
                 <ShieldCheck className="w-6 h-6 text-[#eebf63] stroke-[1.5]" />
@@ -169,8 +169,8 @@ export default function HeroSection() {
       </div>
       
       {/* Premium Carousel Controls */}
-      <div className="absolute right-8 bottom-12 z-30 flex items-center gap-4">
-        <div className="flex gap-2 mr-4">
+      <div className="absolute left-4 right-4 bottom-6 md:left-auto md:right-8 md:bottom-12 z-30 flex items-center justify-between md:justify-end gap-4 bg-[#110722]/50 backdrop-blur-md md:bg-transparent p-2.5 md:p-0 rounded-full border border-white/10 md:border-none">
+        <div className="flex gap-2 ml-4">
           {slides.map((_, idx) => (
             <div 
               key={idx}
@@ -181,12 +181,14 @@ export default function HeroSection() {
             ></div>
           ))}
         </div>
-        <button onClick={prevSlide} className="w-12 h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 hover:border-[#eebf63] transition-all duration-300">
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button onClick={nextSlide} className="w-12 h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 hover:border-[#eebf63] transition-all duration-300">
-          <ChevronRight className="w-5 h-5" />
-        </button>
+        <div className="flex gap-2">
+          <button onClick={prevSlide} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 hover:border-[#eebf63] transition-all duration-300">
+            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
+          <button onClick={nextSlide} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 hover:border-[#eebf63] transition-all duration-300">
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
+        </div>
       </div>
 
     </section>
