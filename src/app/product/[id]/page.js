@@ -4,10 +4,12 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import WhatsAppEnquiryButton from '@/components/ui/WhatsAppEnquiryButton';
-import { Heart, Share2, Shield, Gem, Star, ArrowLeft, RefreshCw, ZoomIn } from 'lucide-react';
+import { Heart, Share2, Shield, Gem, Star, ArrowLeft, RefreshCw, ZoomIn, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 
 export default function ProductDetailPage({ params }) {
+  const { addToCart } = useCart();
   const products = [
     { 
       id: 1, 
@@ -350,16 +352,24 @@ export default function ProductDetailPage({ params }) {
             </div>
 
             {/* Action buttons */}
-            <div className="flex gap-4">
-              <button className="flex-1 py-3.5 border border-gray-200 hover:border-[#1f163b] text-[#1f163b] rounded-xl text-xs font-bold tracking-widest uppercase transition-colors flex items-center justify-center gap-2">
-                <Heart className="w-4 h-4" /> ADD TO WISHLIST
-              </button>
+            <div className="flex flex-col sm:flex-row gap-4">
               <button 
-                onClick={handleShare}
-                className="p-3.5 border border-gray-200 hover:border-[#1f163b] text-[#1f163b] rounded-xl transition-colors"
+                onClick={() => addToCart(product)}
+                className="flex-1 py-4 bg-[#1f163b] hover:bg-[#d4a54c] text-white hover:text-[#110722] rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-[0_4px_15px_rgba(212,165,76,0.3)]"
               >
-                <Share2 className="w-4.5 h-4.5" />
+                <ShoppingBag className="w-4 h-4" /> ADD TO ROYAL SELECTION
               </button>
+              <div className="flex gap-4">
+                <button className="py-4 px-6 border border-gray-200 hover:border-[#1f163b] text-[#1f163b] rounded-xl text-xs font-bold tracking-widest uppercase transition-colors flex items-center justify-center gap-2">
+                  <Heart className="w-4 h-4" /> WISHLIST
+                </button>
+                <button 
+                  onClick={handleShare}
+                  className="p-4 border border-gray-200 hover:border-[#1f163b] text-[#1f163b] rounded-xl transition-colors"
+                >
+                  <Share2 className="w-4.5 h-4.5" />
+                </button>
+              </div>
             </div>
 
             {/* Trust Badges */}

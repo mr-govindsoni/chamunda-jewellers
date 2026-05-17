@@ -12,10 +12,13 @@ import {
   Gem, 
   ArrowRight,
   ZoomIn,
-  MessageSquareCode
+  MessageSquareCode,
+  ShoppingBag
 } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
 export default function NecklacesPage() {
+  const { addToCart } = useCart();
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeGalleryImage, setActiveGalleryImage] = useState('');
@@ -261,12 +264,19 @@ export default function NecklacesPage() {
                   </div>
 
                   {/* Quick Enquiry overlay */}
-                  <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-3 group-hover:translate-y-0 z-20">
+                  <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-3 group-hover:translate-y-0 z-20 px-4">
                     <button 
                       onClick={(e) => handleWhatsAppEnquiry(e, product)}
-                      className="px-6 py-2.5 bg-gradient-to-r from-[#f5cf7b] via-[#eebf63] to-[#d4a54c] text-[#110722] text-[10px] tracking-widest uppercase font-bold rounded-full shadow-lg hover:shadow-[0_0_20px_rgba(238,191,99,0.6)] transform active:scale-95 transition-all duration-300 flex items-center gap-1.5"
+                      className="flex-1 py-2.5 bg-gradient-to-r from-[#f5cf7b] via-[#eebf63] to-[#d4a54c] text-[#110722] text-[10px] tracking-widest uppercase font-bold rounded-full shadow-lg hover:shadow-[0_0_20px_rgba(238,191,99,0.6)] transform active:scale-95 transition-all duration-300 flex items-center justify-center gap-1.5"
                     >
-                      <MessageSquareCode className="w-3.5 h-3.5" /> Enquire Now
+                      <MessageSquareCode className="w-3.5 h-3.5" /> Enquire
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); addToCart({ ...product, category: 'Gold Necklaces' }); }}
+                      className="w-10 h-10 rounded-full bg-white hover:bg-[#eebf63] text-gray-700 hover:text-[#110722] flex items-center justify-center transition-all duration-300 shadow-md border border-gray-100 transform active:scale-90 flex-shrink-0"
+                      title="Add to Selection"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -376,12 +386,21 @@ export default function NecklacesPage() {
 
               {/* Sticky bottom bar or fixed CTAs */}
               <div className="mt-8 pt-6 border-t border-gray-100 space-y-4">
-                <button
-                  onClick={(e) => handleWhatsAppEnquiry(e, selectedProduct)}
-                  className="w-full py-4 bg-gradient-to-r from-[#f5cf7b] via-[#eebf63] to-[#d4a54c] hover:shadow-[0_0_25px_rgba(238,191,99,0.6)] text-[#110722] rounded-xl text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300"
-                >
-                  <MessageSquareCode className="w-4 h-4" /> ENQUIRE ON WHATSAPP
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={(e) => handleWhatsAppEnquiry(e, selectedProduct)}
+                    className="flex-1 py-4 bg-gradient-to-r from-[#f5cf7b] via-[#eebf63] to-[#d4a54c] hover:shadow-[0_0_25px_rgba(238,191,99,0.6)] text-[#110722] rounded-xl text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300"
+                  >
+                    <MessageSquareCode className="w-4 h-4" /> ENQUIRE ON WHATSAPP
+                  </button>
+                  <button 
+                    onClick={() => { addToCart({ ...selectedProduct, category: 'Gold Necklaces' }); setSelectedProduct(null); }}
+                    className="py-4 px-6 border border-[#eebf63] text-[#d4a54c] hover:bg-[#eebf63] hover:text-[#110722] rounded-xl text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300 flex-shrink-0"
+                    title="Add to Royal Selection"
+                  >
+                    <ShoppingBag className="w-4 h-4" /> SELECT PIECE
+                  </button>
+                </div>
 
                 <div className="flex gap-3">
                   <button 

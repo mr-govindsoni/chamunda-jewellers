@@ -1,11 +1,14 @@
+"use client";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import WhatsAppEnquiryButton from '@/components/ui/WhatsAppEnquiryButton';
-import { SlidersHorizontal, ChevronDown, Heart } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, Heart, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
 
 export default function CollectionPage() {
+  const { addToCart } = useCart();
   const products = [
     { id: 1, name: "22K Antique Gold Choker", code: "CJ-G101", category: "Gold Jewellery", image: "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=600&auto=format&fit=crop" },
     { id: 2, name: "Diamond Solitaire Ring", code: "CJ-D202", category: "Diamond Jewellery", image: "https://images.unsplash.com/photo-1605100804763-247f66126e28?q=80&w=600&auto=format&fit=crop" },
@@ -94,15 +97,22 @@ export default function CollectionPage() {
                   </Link>
                 </div>
                 
-                {/* WhatsApp Enquiry Button (Pill Shape with hover glow) */}
-                <div className="mt-auto pt-2">
+                {/* Action Buttons */}
+                <div className="mt-auto pt-2 flex items-center gap-2">
                   <WhatsAppEnquiryButton 
                     productName={product.name}
                     category={product.category}
                     productCode={product.code}
                     imageLink={product.image}
-                    className="w-full"
+                    className="flex-1"
                   />
+                  <button 
+                    onClick={() => addToCart(product)}
+                    className="w-10 h-10 rounded-full border border-gray-200 hover:border-[#eebf63] text-gray-400 hover:text-[#110722] hover:bg-[#eebf63] flex items-center justify-center transition-all duration-300 active:scale-90 flex-shrink-0"
+                    title="Add to Royal Selection"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>

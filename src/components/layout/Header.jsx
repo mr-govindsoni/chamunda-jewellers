@@ -3,10 +3,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import LiveRatesTicker from './LiveRatesTicker';
 import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, MessageCircle } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import SearchOverlay from '@/components/ui/SearchOverlay';
+import CartDrawer from '@/components/ui/CartDrawer';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
+  const { setIsSearchOpen, setIsCartOpen, cartCount } = useCart();
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -83,12 +87,18 @@ export default function Header() {
 
           {/* Right Column: Premium Search & Bag Icons */}
           <div className="flex justify-end items-center gap-3">
-            <button className="text-gray-700 hover:text-[#d4a54c] active:scale-90 transition-transform p-1.5">
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="text-gray-700 hover:text-[#d4a54c] active:scale-90 transition-transform p-1.5"
+            >
               <Search className="w-5 h-5" />
             </button>
-            <button className="text-gray-700 hover:text-[#d4a54c] active:scale-90 transition-transform relative p-1.5">
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="text-gray-700 hover:text-[#d4a54c] active:scale-90 transition-transform relative p-1.5"
+            >
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-0.5 right-0.5 bg-[#1f163b] text-[#eebf63] text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#eebf63]/50 shadow-sm">0</span>
+              <span className="absolute top-0.5 right-0.5 bg-[#1f163b] text-[#eebf63] text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#eebf63]/50 shadow-sm">{cartCount}</span>
             </button>
           </div>
         </div>
@@ -208,15 +218,21 @@ export default function Header() {
 
           {/* Icons */}
           <div className="flex items-center space-x-5">
-            <button className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300">
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300"
+            >
               <Search className="w-5 h-5" />
             </button>
             <button className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300 hidden sm:block">
               <User className="w-5 h-5" />
             </button>
-            <button className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300 relative group">
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300 relative group"
+            >
               <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-              <span className="absolute -top-1.5 -right-2 bg-[#1f163b] text-[#eebf63] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-lg border border-[#eebf63]/50">0</span>
+              <span className="absolute -top-1.5 -right-2 bg-[#1f163b] text-[#eebf63] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-lg border border-[#eebf63]/50">{cartCount}</span>
             </button>
           </div>
         </div>
@@ -377,6 +393,8 @@ export default function Header() {
           </a>
         </div>
       </div>
+      <SearchOverlay />
+      <CartDrawer />
     </header>
   );
 }
