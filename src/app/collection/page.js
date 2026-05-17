@@ -6,7 +6,7 @@ import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
-import { Filter, ChevronDown, ArrowRight, MessageCircle } from 'lucide-react';
+import { Filter, ChevronDown, ChevronRight, X, ArrowRight, MessageCircle } from 'lucide-react';
 
 export default function CollectionPage() {
   const { PRODUCTS } = useCart();

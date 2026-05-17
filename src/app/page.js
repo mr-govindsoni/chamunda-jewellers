@@ -6,6 +6,8 @@ import DigitalCatalog from '@/components/home/DigitalCatalog';
 import PromotionalBanners from '@/components/home/PromotionalBanners';
 import TrendingProducts from '@/components/home/TrendingProducts';
 import StoreInfo from '@/components/home/StoreInfo';
+import TrustBadges from '@/components/home/TrustBadges';
+import CraftsmanshipStory from '@/components/home/CraftsmanshipStory';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import LoginPopup from '@/components/ui/LoginPopup';
@@ -32,7 +34,9 @@ export default function Home() {
 
       <TrendingProducts />
       <DigitalCatalog />
+      <CraftsmanshipStory />
       <PromotionalBanners />
+      <TrustBadges />
       <StoreInfo />
       <Footer />
       <WhatsAppButton />
