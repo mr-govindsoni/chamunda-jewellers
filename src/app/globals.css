@@ -1,26 +1,114 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-purple-900: #251240;
+  --color-purple-800: #3a225e;
+  --color-purple-700: #4f337a;
+  --color-gold-500: #eebf63;
+  --color-gold-400: #f5cf7b;
+  --color-gold-600: #d4a54c;
+  --color-gold-300: #fce2a6;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-gold: pulseGold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulseGold {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(238, 191, 99, 0.4); }
+  50% { opacity: .8; box-shadow: 0 0 0 10px rgba(238, 191, 99, 0); }
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1f163b;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  .glass-dark {
+    @apply bg-[#1f163b]/70 backdrop-blur-lg border border-[#eebf63]/20;
+  }
+  .text-glow-gold {
+    text-shadow: 0 0 10px rgba(238, 191, 99, 0.5);
+  }
+  
+  /* Luxury Gold Shine Sweep */
+  .shine-sweep {
+    position: relative;
+    overflow: hidden;
+  }
+  .shine-sweep::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(252, 226, 166, 0.5),
+      rgba(238, 191, 99, 0.6),
+      rgba(252, 226, 166, 0.5),
+      transparent
+    );
+    transform: skewX(-30deg);
+  }
+  .group:hover .shine-sweep::after {
+    animation: shineSweep 1.5s ease-in-out infinite;
+  }
+
+  /* Subtle float and luxury backgrounds */
+  .bg-ivory {
+    background-color: #fbfaf6;
+  }
+  .animate-float-subtle {
+    animation: floatSubtle 5s ease-in-out infinite;
+  }
+}
+
+@keyframes shineSweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes floatSubtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
