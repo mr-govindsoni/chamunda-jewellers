@@ -123,7 +123,7 @@ export default function HeroSection() {
           <div className="relative z-20">
             
             {/* Animated Text Content */}
-            <div className="relative min-h-[250px] sm:min-h-[300px] lg:min-h-[320px] w-full">
+            <div className="relative min-h-[280px] sm:min-h-[300px] lg:min-h-[320px] w-full">
               {slides.map((slide, idx) => (
                 <div 
                   key={idx}
@@ -131,11 +131,11 @@ export default function HeroSection() {
                     idx === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
-                  <h2 className="text-4xl md:text-5xl lg:text-7xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-[#fce2a6] via-[#eebf63] to-[#d4a54c] font-medium leading-[1.1] mb-6 drop-shadow-[0_0_15px_rgba(238,191,99,0.3)]">
-                    {slide.title}, <br />
-                    <span className="text-white drop-shadow-md">{slide.subtitle}</span>
+                  <h2 className="text-[clamp(1.85rem,7.5vw,4.25rem)] font-serif text-transparent bg-clip-text bg-gradient-to-r from-[#fce2a6] via-[#eebf63] to-[#d4a54c] font-medium leading-[1.2] mb-5 sm:mb-6 drop-shadow-[0_0_15px_rgba(238,191,99,0.3)] select-none">
+                    <span className="block">{slide.title}</span>
+                    <span className="text-white drop-shadow-md block mt-1 sm:mt-2">{slide.subtitle}</span>
                   </h2>
-                  <p className="text-gray-300 text-base md:text-lg font-light max-w-xl leading-relaxed tracking-wide">
+                  <p className="text-gray-300 text-sm sm:text-base md:text-lg font-light max-w-[90vw] sm:max-w-xl leading-relaxed tracking-wide">
                     {slide.desc}
                   </p>
                 </div>
