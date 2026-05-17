@@ -96,17 +96,22 @@ export default function Footer() {
                 <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-4 h-4 text-[#eebf63]" />
                 </div>
-                <span className="text-sm text-gray-300 font-light mt-1 leading-relaxed tracking-wide">
+                <a 
+                  href="https://maps.app.goo.gl/z2MMsspgUnUhFn6c6" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-sm text-gray-300 font-light mt-1 leading-relaxed tracking-wide hover:text-[#eebf63] transition-colors"
+                >
                   Chamunda Jewellers, Charwas,<br />
                   Churu, Rajasthan - 331403
-                </span>
+                </a>
               </div>
             </div>
             
             {/* Embedded Map */}
             <div className="w-full h-32 rounded-xl overflow-hidden border border-[#eebf63]/20 shadow-lg">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14197.66986295325!2d74.45785056977538!3d28.258667500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3914a51e5052ffdf%3A0xc6fbba2bb82a7b8e!2sCharwas%2C%20Rajasthan%20331403!5e0!3m2!1sen!2sin!4v1716035000000!5m2!1sen!2sin" 
+                src="https://maps.google.com/maps?q=27.8022645,74.4050571&z=16&output=embed" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 

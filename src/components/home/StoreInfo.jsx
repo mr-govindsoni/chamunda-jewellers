@@ -49,16 +49,21 @@ export default function StoreInfo() {
                 </div>
               </li>
             </ul>
-            <button className="mt-10 w-full bg-[#eebf63] text-[#1f163b] py-3.5 rounded-lg text-sm font-bold tracking-widest uppercase hover:bg-white transition-colors flex justify-center items-center gap-3 relative z-10 shadow-lg">
+            <a 
+              href="https://maps.app.goo.gl/z2MMsspgUnUhFn6c6" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mt-10 w-full bg-[#eebf63] text-[#1f163b] py-3.5 rounded-lg text-sm font-bold tracking-widest uppercase hover:bg-[#110722] hover:text-[#eebf63] border border-[#eebf63] transition-all duration-300 flex justify-center items-center gap-3 relative z-10 shadow-lg"
+            >
               GET DIRECTIONS <Navigation className="w-4 h-4" />
-            </button>
+            </a>
           </div>
 
           {/* Map */}
           <div className="bg-gray-100 rounded-2xl overflow-hidden h-[400px] lg:h-auto shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] border border-gray-200 relative group">
             <div className="absolute inset-0 bg-[#1f163b]/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 mix-blend-multiply"></div>
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14197.66986295325!2d74.45785056977538!3d28.258667500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3914a51e5052ffdf%3A0xc6fbba2bb82a7b8e!2sCharwas%2C%20Rajasthan%20331403!5e0!3m2!1sen!2sin!4v1716035000000!5m2!1sen!2sin" 
+              src="https://maps.google.com/maps?q=27.8022645,74.4050571&z=16&output=embed" 
               width="100%" 
               height="100%" 
               style={{ border: 0, filter: 'contrast(1.1) saturate(1.2)' }} 
