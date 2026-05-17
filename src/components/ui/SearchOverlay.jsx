@@ -71,22 +71,29 @@ export default function SearchOverlay() {
       <div className="flex-1 overflow-y-auto w-full max-w-[1400px] mx-auto px-6 py-12 md:px-8 flex flex-col items-center">
         
         {/* Input Bar */}
-        <div className="w-full max-w-2xl relative mb-12">
+        <div className="w-full max-w-2xl relative mb-12 group">
           <input 
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search rings, necklaces, gold..."
-            className="w-full text-xl md:text-3xl font-serif text-[#eebf63] bg-transparent border-b-2 border-[#eebf63]/20 focus:border-[#eebf63] outline-none py-4 px-10 placeholder-white/20 text-center transition-all duration-300"
+            style={{ 
+              background: 'rgba(255, 255, 255, 0.18)', 
+              backdropFilter: 'blur(18px)', 
+              WebkitBackdropFilter: 'blur(18px)',
+              border: '1px solid rgba(255, 255, 255, 0.35)',
+              caretColor: '#eebf63' 
+            }}
+            className="w-full text-base sm:text-lg md:text-xl font-sans text-white rounded-[24px] focus:outline-none py-3.5 sm:py-4 px-12 sm:px-14 text-center transition-all duration-300 focus:scale-[1.01] focus:shadow-[0_0_30px_rgba(255,255,255,0.25)] focus:border-[rgba(255,255,255,0.5)] shadow-[0_8px_32px_rgba(0,0,0,0.15),0_0_20px_rgba(255,255,255,0.1)] font-light tracking-wide luxury-search-input"
           />
-          <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 text-[#eebf63]/40" />
+          <Search className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-[#eebf63] hover:scale-115 group-hover:scale-110 transition-transform duration-300 pointer-events-none" />
           {query && (
             <button 
               onClick={() => setQuery('')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
+              className="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:scale-110 active:scale-95 transition-transform duration-300 p-1"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 sm:w-5 h-4 sm:h-5" />
             </button>
           )}
         </div>
@@ -175,6 +182,24 @@ export default function SearchOverlay() {
           )}
         </div>
       </div>
+      <style>{`
+        .luxury-search-input::placeholder {
+          color: rgba(255, 255, 255, 0.85) !important;
+          opacity: 1 !important;
+        }
+        .luxury-search-input::-webkit-input-placeholder {
+          color: rgba(255, 255, 255, 0.85) !important;
+          opacity: 1 !important;
+        }
+        .luxury-search-input::-moz-placeholder {
+          color: rgba(255, 255, 255, 0.85) !important;
+          opacity: 1 !important;
+        }
+        .luxury-search-input:-ms-input-placeholder {
+          color: rgba(255, 255, 255, 0.85) !important;
+          opacity: 1 !important;
+        }
+      `}</style>
     </div>
   );
 }
