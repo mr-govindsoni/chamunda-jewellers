@@ -117,7 +117,7 @@ export default function TrendingProducts() {
           >
             {products.map((product) => (
               <div key={product.id} className="min-w-[280px] sm:min-w-[320px] max-w-[320px] snap-center group">
-                <div className="relative h-[380px] rounded-2xl overflow-hidden mb-6 bg-gray-50 shadow-[0_10px_30px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_rgba(31,22,59,0.15)] transition-all duration-500">
+                <div className="relative h-[380px] rounded-2xl overflow-hidden mb-6 bg-gray-50 shadow-[0_10px_30px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_rgba(31,22,59,0.15)] group-hover:border group-hover:border-[#d4a54c]/50 transition-all duration-500">
                   {/* Image */}
                   <img src={product.image} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1.5s] ease-out" />
                   
@@ -128,14 +128,23 @@ export default function TrendingProducts() {
                     </div>
                   )}
 
-                  {/* Hover Overlay Actions */}
-                  <div className="absolute inset-0 bg-[#1f163b]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 z-20">
-                    <button className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#1f163b] hover:bg-[#eebf63] hover:text-white transition-colors duration-300 transform translate-y-4 group-hover:translate-y-0 shadow-lg">
-                      <ShoppingBag className="w-5 h-5" />
-                    </button>
-                    <button className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#1f163b] hover:text-red-500 transition-colors duration-300 transform translate-y-4 group-hover:translate-y-0 shadow-lg" style={{ transitionDelay: '50ms' }}>
-                      <Heart className="w-5 h-5" />
-                    </button>
+                  {/* Premium Glass Hover Overlay */}
+                  <div className="absolute inset-0 bg-[#1f163b]/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4 z-20 px-6">
+                    <a 
+                      href={`https://wa.me/916367246095?text=${encodeURIComponent(`Hello Chamunda Jewellers, I want inquiry about this jewellery design: ${product.name} (${product.category}).`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-[#25D366] text-white py-3 rounded-full flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest hover:bg-[#20ba5a] transition-colors shadow-[0_0_20px_rgba(37,211,102,0.4)] transform translate-y-4 group-hover:translate-y-0 duration-500"
+                    >
+                      WhatsApp Inquiry
+                    </a>
+                    <Link 
+                      href={`/product/${product.id}`}
+                      className="w-full bg-transparent border border-[#d4a54c] text-[#d4a54c] py-3 rounded-full flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest hover:bg-[#d4a54c] hover:text-[#1f163b] transition-colors transform translate-y-4 group-hover:translate-y-0 duration-500"
+                      style={{ transitionDelay: '50ms' }}
+                    >
+                      View Details
+                    </Link>
                   </div>
                 </div>
 
@@ -143,7 +152,6 @@ export default function TrendingProducts() {
                 <div className="text-center px-2">
                   <p className="text-[10px] font-bold text-[#d4a54c] uppercase tracking-[0.2em] mb-2">{product.category}</p>
                   <h3 className="text-lg font-serif text-[#1f163b] font-medium tracking-wide mb-2 line-clamp-1 group-hover:text-[#d4a54c] transition-colors">{product.name}</h3>
-                  <p className="text-sm font-sans font-medium text-gray-600">{product.price}</p>
                 </div>
               </div>
             ))}
