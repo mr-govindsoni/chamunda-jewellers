@@ -44,7 +44,7 @@ export default function DigitalCatalog() {
   ];
 
   return (
-    <section className="py-24 bg-[#faf9f5] relative">
+    <section className="hidden md:block py-24 bg-[#faf9f5] relative">
       {/* Subtle details background grid pattern */}
       <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#1f163b 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
       
