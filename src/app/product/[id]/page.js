@@ -169,7 +169,8 @@ export default function ProductDetailPage({ params }) {
   ];
 
   // Safely find product by ID, fallback to first product if not found
-  const productId = parseInt(params?.id) || 1;
+  const resolvedParams = React.use(params);
+  const productId = parseInt(resolvedParams?.id) || 1;
   const product = products.find(p => p.id === productId) || products[0];
 
   const [activeImage, setActiveImage] = useState(product.images ? product.images[0] : product.image);
