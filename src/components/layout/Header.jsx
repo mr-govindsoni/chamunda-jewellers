@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import LiveRatesTicker from './LiveRatesTicker';
 import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, MessageCircle } from 'lucide-react';
@@ -7,6 +7,17 @@ import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, M
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const toggleMobileCategory = (cat) => {
     setExpandedMobileCategory(expandedMobileCategory === cat ? null : cat);
@@ -211,151 +222,159 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer Overlay */}
+      {/* Immersive Full-Screen Mobile Menu Drawer */}
       <div 
-        className={`fixed inset-0 z-50 md:hidden bg-black/75 backdrop-blur-sm transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-        onClick={() => setIsMobileMenuOpen(false)}
+        className={`fixed inset-0 z-50 md:hidden bg-gradient-to-b from-[#110722] via-[#1a0b2e] to-[#0d041a] backdrop-blur-[18px] text-white flex flex-col transition-all duration-500 ease-in-out ${
+          isMobileMenuOpen ? 'opacity-100 pointer-events-auto scale-100' : 'opacity-0 pointer-events-none scale-95'
+        }`}
+        style={{ width: '100vw', height: '100vh', height: '100dvh' }}
       >
-        <div 
-          className={`fixed inset-y-0 left-0 w-[85vw] max-w-[380px] bg-gradient-to-b from-[#1a0b2e]/98 via-[#110722]/99 to-[#23123a]/98 backdrop-blur-2xl text-white shadow-[25px_0_60px_rgba(0,0,0,0.6)] flex flex-col z-50 border-r border-[#eebf63]/30 transition-transform duration-300 ease-out transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Header of Mobile Menu */}
-          <div className="p-5 border-b border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-[#3a225e] transform rotate-45 flex items-center justify-center border border-[#d4a54c]">
-                <div className="w-5 h-5 border border-[#d4a54c] flex items-center justify-center">
-                  <div className="w-2 h-2 bg-[#d4a54c] rounded-full animate-pulse-gold"></div>
-                </div>
-              </div>
-              <div>
-                <h2 className="text-base font-serif text-[#eebf63] font-medium tracking-[0.12em] uppercase leading-none select-none">Chamunda</h2>
-                <p className="text-[8px] text-gray-400 uppercase tracking-[0.2em] mt-1 font-semibold select-none">Jewellers</p>
-              </div>
-            </div>
-            <button 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-[#eebf63] hover:text-white p-2 rounded-full bg-white/5 transition-colors duration-300 border border-white/5 hover:border-[#eebf63]/30"
-              aria-label="Close menu"
-            >
-              <X className="w-5 h-5" />
-            </button>
+        {/* Custom Breathing Keyframes for Premium WhatsApp Enquiry Button */}
+        <style jsx global>{`
+          @keyframes wa-breath {
+            0% { box-shadow: 0 0 10px rgba(37, 211, 102, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 25px rgba(37, 211, 102, 0.7); transform: scale(1.02); }
+            100% { box-shadow: 0 0 10px rgba(37, 211, 102, 0.4); transform: scale(1); }
+          }
+          .animate-wa-premium-breath {
+            animation: wa-breath 3s infinite ease-in-out;
+          }
+        `}</style>
+
+        {/* Header of Full-Screen Mobile Menu */}
+        <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+          {/* Balanced Left Padding */}
+          <div className="w-11"></div>
+
+          {/* Centered Large Luxury Logo */}
+          <div className="flex flex-col items-center select-none text-center">
+            <h2 className="text-2xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none">Chamunda</h2>
+            <p className="text-[9px] text-gray-400 uppercase tracking-[0.25em] mt-2 font-bold">Jewellers</p>
           </div>
 
-          {/* Menu Links */}
-          <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4">
-            <Link 
-              href="/" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-[17px] font-serif font-medium tracking-wide text-white hover:text-[#eebf63] py-3 border-b border-white/10 transition-colors duration-300"
-              style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-            >
-              Home
-            </Link>
+          {/* Right: Circular glass close button with gold icons & hover glow */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="w-11 h-11 rounded-full bg-white/5 border border-[#eebf63]/25 flex items-center justify-center text-[#eebf63] shadow-lg hover:bg-white/10 active:scale-90 transition-all duration-300"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-            {/* Categories Collapsible */}
-            <div className="space-y-3">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-[#eebf63] font-bold mt-4 opacity-75">Collections</p>
-              
-              {Object.entries(categories).map(([categoryName, data]) => {
-                const isExpanded = expandedMobileCategory === categoryName;
-                return (
-                  <div key={categoryName} className="border-b border-white/10 pb-2">
-                    <button 
-                      onClick={() => toggleMobileCategory(categoryName)}
-                      className="w-full flex items-center justify-between text-[17px] py-3 text-left font-medium text-gray-200 hover:text-[#eebf63] transition-all duration-300"
+        {/* Menu Links */}
+        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-4">
+          <Link 
+            href="/" 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="w-full flex items-center min-h-[56px] text-lg font-serif font-medium tracking-wide text-white hover:text-[#eebf63] py-3 border-b border-white/10 transition-colors duration-300"
+            style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            Home
+          </Link>
+
+          {/* Categories Collapsible */}
+          <div className="space-y-3">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#eebf63] font-bold mt-4 opacity-75">Collections</p>
+            
+            {Object.entries(categories).map(([categoryName, data]) => {
+              const isExpanded = expandedMobileCategory === categoryName;
+              return (
+                <div key={categoryName} className="border-b border-white/10 pb-1">
+                  <button 
+                    onClick={() => toggleMobileCategory(categoryName)}
+                    className="w-full flex items-center justify-between min-h-[56px] py-3 text-left font-medium text-gray-200 hover:text-[#eebf63] transition-all duration-300"
+                  >
+                    <span 
+                      className="truncate font-serif text-lg tracking-wide select-none" 
+                      style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                     >
-                      <span 
-                        className="truncate font-serif tracking-wide select-none" 
-                        style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                      >
-                        {categoryName}
-                      </span>
-                      <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-[#eebf63]' : ''}`} />
-                    </button>
-                    
-                    {isExpanded && (
-                      <div className="pl-4 mt-2 space-y-3 animate-fade-in border-l border-[#eebf63]/20">
-                        {data.links.map(link => (
-                          <Link 
-                            key={link}
-                            href={link.toLowerCase() === 'necklaces' ? "/collection/necklaces" : link.toLowerCase() === 'rings' ? "/collection/rings" : "/collection"}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block text-sm text-gray-400 hover:text-[#eebf63] py-1.5 transition-all duration-300 font-sans tracking-wide truncate"
-                            style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                          >
-                            {link}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Live Rates Accordion Section */}
-            <div className="border-b border-white/10 pb-2">
-              <Link 
-                href="/live-rates" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex items-center justify-between text-[17px] py-3 text-left font-serif font-medium text-red-500 hover:text-red-400 transition-all duration-300"
-              >
-                <span 
-                  className="truncate tracking-wide flex items-center gap-2"
-                  style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                >
-                  <span className="relative flex h-2 w-2 flex-shrink-0">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-                  </span>
-                  Live Gold Rates
-                </span>
-                <ChevronRight className="w-4 h-4 text-red-500/70" />
-              </Link>
-            </div>
-
-            {/* Visit Boutique Accordion Section */}
-            <div className="border-b border-white/10 pb-2">
-              <a 
-                href="https://maps.app.goo.gl/z2MMsspgUnUhFn6c6"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex items-center justify-between text-[17px] py-3 text-left font-serif font-medium text-gray-200 hover:text-[#eebf63] transition-all duration-300"
-              >
-                <span 
-                  className="truncate tracking-wide"
-                  style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                >
-                  Visit Boutique
-                </span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </a>
-            </div>
+                      {categoryName}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-[#eebf63]' : ''}`} />
+                  </button>
+                  
+                  {isExpanded && (
+                    <div className="pl-4 mt-2 space-y-1.5 animate-fade-in border-l border-[#eebf63]/20 pb-2">
+                      {data.links.map(link => (
+                        <Link 
+                          key={link}
+                          href={link.toLowerCase() === 'necklaces' ? "/collection/necklaces" : link.toLowerCase() === 'rings' ? "/collection/rings" : "/collection"}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="w-full flex items-center min-h-[48px] text-sm text-gray-400 hover:text-[#eebf63] py-2 border-b border-white/5 last:border-0 transition-all duration-300 font-sans tracking-wide truncate"
+                          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        >
+                          {link}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
-          {/* Footer of Mobile Menu */}
-          <div className="p-5 bg-white/5 border-t border-white/10 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#eebf63]">
-                <Phone className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-[9px] text-gray-400 uppercase tracking-wider font-light">Call Boutique</p>
-                <p className="text-xs text-white font-medium">+91 63672 46095</p>
-              </div>
-            </div>
-
-            <a 
-              href="https://wa.me/916367246095" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-full bg-[#25d366] hover:bg-[#20ba5a] text-white py-3.5 rounded-xl font-bold tracking-widest text-xs uppercase flex justify-center items-center gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(37,211,102,0.3)] border border-transparent"
+          {/* Live Rates Accordion Section */}
+          <div className="border-b border-white/10 pb-1">
+            <Link 
+              href="/live-rates" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between min-h-[56px] py-3 text-left font-serif text-lg font-medium text-red-500 hover:text-red-400 transition-all duration-300"
             >
-              <MessageCircle className="w-4 h-4 fill-white" /> WHATSAPP INQUIRY
+              <span 
+                className="truncate tracking-wide flex items-center gap-2.5"
+                style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              >
+                <span className="relative flex h-2 w-2 flex-shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                </span>
+                Live Gold Rates
+              </span>
+              <ChevronRight className="w-4 h-4 text-red-500/70" />
+            </Link>
+          </div>
+
+          {/* Visit Boutique Accordion Section */}
+          <div className="border-b border-white/10 pb-1">
+            <a 
+              href="https://maps.app.goo.gl/z2MMsspgUnUhFn6c6"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between min-h-[56px] py-3 text-left font-serif text-lg font-medium text-gray-200 hover:text-[#eebf63] transition-all duration-300"
+            >
+              <span 
+                className="truncate tracking-wide"
+                style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              >
+                Visit Boutique
+              </span>
+              <ChevronRight className="w-4 h-4 text-gray-400" />
             </a>
           </div>
+        </div>
+
+        {/* Footer of Mobile Menu */}
+        <div className="px-6 py-6 bg-white/5 border-t border-white/10 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#eebf63]">
+              <Phone className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-[9px] text-gray-400 uppercase tracking-wider font-light">Call Boutique</p>
+              <p className="text-xs text-white font-medium">+91 63672 46095</p>
+            </div>
+          </div>
+
+          <a 
+            href="https://wa.me/916367246095" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-full bg-[#25d366] hover:bg-[#20ba5a] text-white py-4 rounded-[18px] font-bold tracking-widest text-xs uppercase flex justify-center items-center gap-2.5 transition-all duration-300 shadow-[0_0_20px_rgba(37,211,102,0.3)] border border-transparent animate-wa-premium-breath"
+          >
+            <MessageCircle className="w-4 h-4 fill-white" /> WHATSAPP INQUIRY
+          </a>
         </div>
       </div>
     </header>
