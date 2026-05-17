@@ -50,6 +50,8 @@ const jsonLd = {
   "priceRange": "$$$"
 };
 
+import SmoothScrolling from '@/components/layout/SmoothScrolling';
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -62,9 +64,11 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <CartProvider>
-          {children}
-        </CartProvider>
+        <SmoothScrolling>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </SmoothScrolling>
       </body>
     </html>
   );

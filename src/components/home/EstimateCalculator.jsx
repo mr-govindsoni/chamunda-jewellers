@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { Calculator, RefreshCw, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Simple custom hook for count up animation
 function useCountUp(value, duration = 1000) {
@@ -100,7 +101,13 @@ export default function EstimateCalculator() {
   };
 
   return (
-    <div className="glass-dark rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex-1 relative group/calc">
+    <motion.div 
+      initial={{ opacity: 0, x: -40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className="glass-dark rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex-1 relative group/calc"
+    >
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
       
       {/* Header */}
@@ -209,6 +216,6 @@ export default function EstimateCalculator() {
         </div>
         
       </div>
-    </div>
+    </motion.div>
   );
 }

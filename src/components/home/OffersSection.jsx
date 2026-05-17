@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { Gift, Gem, RefreshCcw, Percent, ChevronRight, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function OffersSection() {
   const [currentOffer, setCurrentOffer] = useState(0);
@@ -40,7 +41,13 @@ export default function OffersSection() {
   }, [offers.length]);
 
   return (
-    <div className="rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex-1 h-full flex flex-col relative group/offers bg-[#1f163b]">
+    <motion.div 
+      initial={{ opacity: 0, x: 40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+      className="rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex-1 h-full flex flex-col relative group/offers bg-[#1f163b]"
+    >
       {/* Background Images for Slider */}
       {offers.map((offer, idx) => (
         <div 
@@ -100,6 +107,6 @@ export default function OffersSection() {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

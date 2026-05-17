@@ -4,6 +4,7 @@ import EstimateCalculator from '@/components/home/EstimateCalculator';
 import OffersSection from '@/components/home/OffersSection';
 import DigitalCatalog from '@/components/home/DigitalCatalog';
 import PromotionalBanners from '@/components/home/PromotionalBanners';
+import TrendingProducts from '@/components/home/TrendingProducts';
 import StoreInfo from '@/components/home/StoreInfo';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
@@ -29,6 +30,7 @@ export default function Home() {
         </div>
       </section>
 
+      <TrendingProducts />
       <DigitalCatalog />
       <PromotionalBanners />
       <StoreInfo />

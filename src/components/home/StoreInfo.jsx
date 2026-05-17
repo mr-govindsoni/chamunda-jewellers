@@ -1,4 +1,19 @@
+"use client";
 import { MapPin, Phone, Clock, Award, ShieldCheck, Search, Users, Navigation } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
+};
 
 export default function StoreInfo() {
   const whyChooseUs = [
@@ -16,7 +31,13 @@ export default function StoreInfo() {
       <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#1f163b]/5 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch"
+        >
           
           {/* Visit Our Store */}
           <div className="bg-[#1f163b] p-8 md:p-10 rounded-2xl shadow-[0_20px_40px_-10px_rgba(31,22,59,0.3)] border border-[#eebf63]/20 flex flex-col justify-center relative group overflow-hidden">
@@ -77,9 +98,15 @@ export default function StoreInfo() {
           {/* Why Choose Us */}
           <div className="bg-[#fafafa] p-8 md:p-10 rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col justify-center">
             <h3 className="text-3xl font-serif text-[#1f163b] font-medium tracking-wide mb-8">Why Choose Us?</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6"
+            >
               {whyChooseUs.map((feature, idx) => (
-                <div key={idx} className="flex items-center gap-5 group cursor-pointer p-4 -m-4 rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[#eebf63]/20">
+                <motion.div key={idx} variants={itemVariants} className="flex items-center gap-5 group cursor-pointer p-4 -m-4 rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[#eebf63]/20">
                   <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center border border-gray-100 shadow-sm group-hover:bg-[#1f163b] group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500 relative">
                     <div className="absolute inset-0 rounded-xl bg-[#eebf63] opacity-0 group-hover:opacity-20 animate-pulse-gold pointer-events-none"></div>
                     <div className="text-[#d4a54c] group-hover:text-[#eebf63] transition-colors">{feature.icon}</div>
@@ -88,12 +115,12 @@ export default function StoreInfo() {
                     <h4 className="text-base font-bold text-[#1f163b] group-hover:text-[#d4a54c] transition-colors">{feature.title}</h4>
                     <p className="text-xs font-medium tracking-wide text-gray-500 mt-1 uppercase">{feature.desc}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

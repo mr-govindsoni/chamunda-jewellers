@@ -2,6 +2,20 @@
 import React from 'react';
 import { Percent, Sparkles, Gem, Landmark, ShieldCheck, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+};
 
 export default function PromotionalBanners() {
   const promos = [
@@ -65,7 +79,13 @@ export default function PromotionalBanners() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
-        <div className="flex flex-col items-center text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center text-center mb-16"
+        >
           <div className="flex items-center gap-2 mb-4">
             <div className="w-8 h-[1px] bg-[#eebf63]/50"></div>
             <Sparkles className="w-4 h-4 text-[#eebf63] animate-pulse" />
@@ -77,64 +97,71 @@ export default function PromotionalBanners() {
           <p className="text-gray-400 font-light mt-3 max-w-lg tracking-wide text-xs sm:text-sm">
             Experience exceptional designs crafted with heritage precision, paired with premier royal incentives.
           </p>
-        </div>
+        </motion.div>
 
         {/* Responsive Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-10 gap-8">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-10 gap-8"
+        >
           {promos.map((promo) => (
-            <Link 
-              key={promo.id}
-              href={promo.link}
-              className={`group relative h-[320px] rounded-3xl overflow-hidden shadow-2xl border border-white/5 hover:border-[#eebf63]/40 transition-all duration-700 ease-out block ${promo.cols}`}
-            >
-              {/* Image & Dark Vignette */}
-              <div className="absolute inset-0 z-0 bg-[#1f163b]">
-                <img 
-                  src={promo.image} 
-                  alt={promo.title} 
-                  className="w-full h-full object-cover opacity-80 filter brightness-[0.8] saturate-[1.05] group-hover:scale-105 transition-transform duration-[1000ms] ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#110722] via-[#110722]/50 to-transparent z-10"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0)_30%,_rgba(17,7,34,0.6)_100%)] z-10"></div>
-              </div>
-
-              {/* Glowing Outline Frame */}
-              <div className="absolute inset-4 border border-[#eebf63]/10 group-hover:border-[#eebf63]/40 transition-colors duration-700 z-20 pointer-events-none rounded-2xl"></div>
-
-              {/* Hover Light Sparkle / Glow on Corners */}
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#eebf63] to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 z-20 animate-shimmer"></div>
-
-              {/* Text / Badge Content */}
-              <div className="absolute inset-0 p-8 flex flex-col justify-between items-start z-30">
-                {/* Top Badge Icon (White glassmorphism effect) */}
-                <div 
-                  style={{ background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.2)' }}
-                  className="p-2.5 rounded-2xl shadow-lg flex items-center justify-center"
-                >
-                  {promo.icon}
+            <motion.div key={promo.id} variants={itemVariants} className={promo.cols}>
+              <Link 
+                href={promo.link}
+                className="group relative h-[320px] rounded-3xl overflow-hidden shadow-2xl border border-white/5 hover:border-[#eebf63]/40 transition-all duration-700 ease-out block"
+              >
+                {/* Image & Dark Vignette */}
+                <div className="absolute inset-0 z-0 bg-[#1f163b]">
+                  <img 
+                    src={promo.image} 
+                    alt={promo.title} 
+                    className="w-full h-full object-cover opacity-80 filter brightness-[0.8] saturate-[1.05] group-hover:scale-105 transition-transform duration-[1000ms] ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#110722] via-[#110722]/50 to-transparent z-10"></div>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0)_30%,_rgba(17,7,34,0.6)_100%)] z-10"></div>
                 </div>
 
-                {/* Bottom Copy Text */}
-                <div className="space-y-1.5 w-full">
-                  <span className="text-[#eebf63] font-bold text-[9px] tracking-[0.25em] uppercase block mb-1">
-                    {promo.tagline}
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-serif text-white font-medium tracking-wide">
-                    {promo.title}
-                  </h3>
-                  <p className="text-gray-300 font-light text-xs max-w-xs leading-relaxed opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                    {promo.desc}
-                  </p>
-                  
-                  {/* Subtle Call to Action */}
-                  <div className="pt-2 flex items-center gap-1.5 text-white/90 text-[10px] font-bold tracking-widest uppercase pb-1 border-b border-[#eebf63]/0 group-hover:border-[#eebf63]/65 transition-all duration-500 w-fit">
-                    EXPLORE NOW <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                {/* Glowing Outline Frame */}
+                <div className="absolute inset-4 border border-[#eebf63]/10 group-hover:border-[#eebf63]/40 transition-colors duration-700 z-20 pointer-events-none rounded-2xl"></div>
+
+                {/* Hover Light Sparkle / Glow on Corners */}
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#eebf63] to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 z-20 animate-shimmer"></div>
+
+                {/* Text / Badge Content */}
+                <div className="absolute inset-0 p-8 flex flex-col justify-between items-start z-30">
+                  {/* Top Badge Icon (White glassmorphism effect) */}
+                  <div 
+                    style={{ background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.2)' }}
+                    className="p-2.5 rounded-2xl shadow-lg flex items-center justify-center"
+                  >
+                    {promo.icon}
+                  </div>
+
+                  {/* Bottom Copy Text */}
+                  <div className="space-y-1.5 w-full">
+                    <span className="text-[#eebf63] font-bold text-[9px] tracking-[0.25em] uppercase block mb-1">
+                      {promo.tagline}
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-serif text-white font-medium tracking-wide">
+                      {promo.title}
+                    </h3>
+                    <p className="text-gray-300 font-light text-xs max-w-xs leading-relaxed opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                      {promo.desc}
+                    </p>
+                    
+                    {/* Subtle Call to Action */}
+                    <div className="pt-2 flex items-center gap-1.5 text-white/90 text-[10px] font-bold tracking-widest uppercase pb-1 border-b border-[#eebf63]/0 group-hover:border-[#eebf63]/65 transition-all duration-500 w-fit">
+                      EXPLORE NOW <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

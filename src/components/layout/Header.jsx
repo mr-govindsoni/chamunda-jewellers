@@ -6,11 +6,23 @@ import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, M
 import { useCart } from '@/context/CartContext';
 import SearchOverlay from '@/components/ui/SearchOverlay';
 import CartDrawer from '@/components/ui/CartDrawer';
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
   const { setIsSearchOpen, setIsCartOpen, cartCount } = useCart();
+  const [hidden, setHidden] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious();
+    if (latest > 150 && latest > previous) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -56,7 +68,15 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-[0_2px_20px_-5px_rgba(0,0,0,0.1)] font-sans border-b border-[#eebf63]/30">
+    <motion.header 
+      variants={{
+        visible: { y: 0 },
+        hidden: { y: "-100%" }
+      }}
+      animate={hidden ? "hidden" : "visible"}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      className="w-full sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-[0_2px_20px_-5px_rgba(0,0,0,0.1)] font-sans border-b border-[#eebf63]/30"
+    >
       <LiveRatesTicker />
       
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -395,6 +415,6 @@ export default function Header() {
       </div>
       <SearchOverlay />
       <CartDrawer />
-    </header>
+    </motion.header>
   );
 }
