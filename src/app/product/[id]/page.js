@@ -9,173 +9,15 @@ import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 
 export default function ProductDetailPage({ params }) {
-  const { addToCart } = useCart();
-  const products = [
-    { 
-      id: 1, 
-      name: "22K Antique Gold Choker", 
-      code: "CJ-G101", 
-      category: "Gold Jewellery", 
-      image: "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "An exquisite antique gold choker necklace meticulously handcrafted by our master artisans in Rajasthan. Embellished with traditional royal motifs, delicate filigree wirework, and a luxurious matte gold finish. This regal piece is designed for the modern bride who treasures timeless heritage.",
-      specs: {
-        "Metal Type": "22K Yellow Gold",
-        "Purity": "91.6% BIS Hallmarked",
-        "Approx. Weight": "48.50 grams",
-        "Dimension / Size": "Adjustable Thread",
-        "Artistry Type": "Antique / Nakshi Work",
-        "Origin": "Charwas, Rajasthan"
-      }
-    },
-    { 
-      id: 2, 
-      name: "Diamond Solitaire Ring", 
-      code: "CJ-D202", 
-      category: "Diamond Jewellery", 
-      image: "https://images.unsplash.com/photo-1605100804763-247f66126e28?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1605100804763-247f66126e28?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "A breathtaking statement of pure love and commitment. This signature solitaire engagement ring features a brilliant round-cut diamond, mounted on an elegant 18K white gold band. Evaluated and certified by internationally renowned GIA gemologists to guarantee top-tier clarity and fire.",
-      specs: {
-        "Metal Type": "18K White Gold",
-        "Purity": "75.0% Hallmarked Gold",
-        "Diamond Clarity": "VVS1 / VVS2",
-        "Diamond Color": "E - F (Colorless)",
-        "Carat Weight": "1.25 Carats",
-        "Certification": "GIA & IGI Certified"
-      }
-    },
-    { 
-      id: 3, 
-      name: "Temple Jewellery Set", 
-      code: "CJ-G103", 
-      category: "Gold Jewellery", 
-      image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "Imbued with divine elegance, this royal Temple Jewellery set depicts traditional deities inside beautifully detailed sanctum arches. Perfect for brides who desire an authentic heritage aesthetic with maximum luxury impact.",
-      specs: {
-        "Metal Type": "22K Gold plating on Silver",
-        "Purity": "925 Sterling Silver base",
-        "Gemstones": "Natural Ruby & Emeralds",
-        "Approx. Weight": "65.20 grams",
-        "Collection": "Rajputana Royal Heritage",
-        "Set Includes": "Necklace & Pair of Earrings"
-      }
-    },
-    { 
-      id: 4, 
-      name: "Traditional Gold Bangles", 
-      code: "CJ-G104", 
-      category: "Gold Jewellery", 
-      image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "Complete your traditional attire with this set of two intricately structured bangles, detailed with gold bead clusters and red gemstones. Fitted with an elegant safety lock clasp to ensure safety without compromising aesthetics.",
-      specs: {
-        "Metal Type": "22K Yellow Gold",
-        "Purity": "91.6% BIS Hallmarked",
-        "Approx. Weight": "32.40 grams",
-        "Bangle Size": "2.4, 2.6, 2.8 available",
-        "Finish": "High polish & antique mix"
-      }
-    },
-    { 
-      id: 5, 
-      name: "Kundan Polki Necklace", 
-      code: "CJ-G105", 
-      category: "Gold Jewellery", 
-      image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1605100804763-247f66126e28?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1620608759551-7f9e160e1d16?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "A breathtaking marriage of traditional Kundan setting and uncut Polki diamonds. Flawlessly complemented with hanging natural pearls and a custom silk adjustable cord.",
-      specs: {
-        "Metal Type": "22K Gold Foil Setting",
-        "Purity": "22K Gold Core",
-        "Stone Type": "Uncut Polki Diamonds & Pearls",
-        "Carat Info": "12.5 Carats Polki",
-        "Origin": "Jaipur Craft Guild"
-      }
-    },
-    { 
-      id: 6, 
-      name: "Pure Silver Pooja Thali", 
-      code: "CJ-S306", 
-      category: "Silver Articles", 
-      image: "https://images.unsplash.com/photo-1620608759551-7f9e160e1d16?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1620608759551-7f9e160e1d16?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "A premium pure silver puja platter complete with accessories. Meticulously embossed with divine patterns, it is ideal for auspicious beginnings and luxury gifting.",
-      specs: {
-        "Metal Type": "92.5% Sterling Silver",
-        "Purity": "925 Certified Silver",
-        "Approx. Weight": "240.00 grams",
-        "Platter Size": "10 inches diameter",
-        "Gift Packaging": "Royal Velvet Box Included"
-      }
-    },
-    { 
-      id: 7, 
-      name: "24K Gold Coin (10g)", 
-      code: "CJ-B407", 
-      category: "Bullion", 
-      image: "https://images.unsplash.com/photo-1610660600122-bd885de5eaaf?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1610660600122-bd885de5eaaf?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "Invest in trust. This 24K 99.9% pure gold bullion coin is embossed with the official Chamunda Jewellers hallmark and comes sealed in tamper-proof premium card packaging.",
-      specs: {
-        "Metal Type": "24K Fine Gold",
-        "Purity": "99.9% Pure Gold",
-        "Weight": "10.00 grams",
-        "Packaging": "Tamper-proof Assay Card",
-        "Taxation": "3% GST Applicable"
-      }
-    },
-    { 
-      id: 8, 
-      name: "Diamond Drop Earrings", 
-      code: "CJ-D208", 
-      category: "Diamond Jewellery", 
-      image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop"
-      ],
-      desc: "Delicate and glamorous drop earrings studded with brilliant round diamonds. Designed to catch light from every angle, these drops provide unparalleled sparkle.",
-      specs: {
-        "Metal Type": "18K Rose Gold",
-        "Purity": "75.0% Hallmarked",
-        "Diamond Cut": "Excellent Round Brilliant",
-        "Diamond Clarity": "VVS2 / VS1",
-        "Setting Type": "Micro Prong Setting"
-      }
-    }
-  ];
+  const { addToCart, PRODUCTS } = useCart();
 
   // Safely find product by ID, fallback to first product if not found
   const resolvedParams = React.use(params);
   const productId = parseInt(resolvedParams?.id) || 1;
-  const product = products.find(p => p.id === productId) || products[0];
+  const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
 
-  const [activeImage, setActiveImage] = useState(product.images ? product.images[0] : product.image);
+  const initialImage = product?.images?.[0] || product?.image || "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop";
+  const [activeImage, setActiveImage] = useState(initialImage);
   const [zoomStyle, setZoomStyle] = useState({ display: 'none', backgroundPosition: '0% 0%' });
 
   // Custom Zoom on hover function
@@ -342,12 +184,14 @@ export default function ProductDetailPage({ params }) {
             <div className="space-y-4">
               <h3 className="text-sm font-bold uppercase tracking-widest text-[#1f163b]">Specifications</h3>
               <div className="bg-[#fafafa] rounded-2xl border border-gray-100 p-6 divide-y divide-gray-100">
-                {Object.entries(product.specs).map(([key, val]) => (
+                {product?.specs ? Object.entries(product.specs).map(([key, val]) => (
                   <div key={key} className="flex justify-between py-3 text-xs">
                     <span className="text-gray-400 font-medium">{key}</span>
                     <span className="text-[#1f163b] font-semibold">{val}</span>
                   </div>
-                ))}
+                )) : (
+                  <div className="py-3 text-xs text-gray-500">Bespoke specifications available upon inquiry.</div>
+                )}
               </div>
             </div>
 
