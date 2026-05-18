@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Gem, RefreshCw, Sparkles } from 'lucide-react';
-import Link from 'next/link';
+import { ChevronLeft, ChevronRight, ShieldCheck, Gem, RefreshCw } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -10,7 +10,7 @@ export default function HeroSection() {
   const [touchEnd, setTouchEnd] = useState(0);
   const heroRef = useRef(null);
 
-  const slides = [
+  const defaultSlides = [
     {
       type: 'image',
       src: "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=2938&auto=format&fit=crop",
@@ -51,16 +51,50 @@ export default function HeroSection() {
       src: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2938&auto=format&fit=crop",
       title: "Bespoke Festive Couture",
       subtitle: "Exclusive Season Offers",
-      desc: "Cherish spectacular moments with customized services and flat 20% off on premium gold making charges."
+      desc: "Cherish spectacular moments with customized services and flat 20% off on premium gold making charges.",
+      luxury_tag: "Festive Offer"
     }
   ];
 
+  const [activeSlides, setActiveSlides] = useState(defaultSlides);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    async function fetchBanners() {
+      try {
+        const { data, error } = await supabase.from('hero_banners').select('*').eq('is_active', true).order('display_order', { ascending: true });
+        if (!error && data && data.length > 0) {
+          const formattedSlides = data.map(b => ({
+            type: 'image',
+            src: b.desktop_image,
+            mobileSrc: b.mobile_image || b.desktop_image,
+            title: b.title,
+            subtitle: b.subtitle,
+            desc: b.description,
+            cta_text: b.cta_text,
+            cta_url: b.cta_url,
+            luxury_tag: b.luxury_tag || "Luxury Campaign"
+          }));
+          setActiveSlides(formattedSlides);
+        } else {
+          setActiveSlides(defaultSlides);
+        }
+      } catch (err) {
+        setActiveSlides(defaultSlides);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchBanners();
+  }, []);
+
+  useEffect(() => {
+    if (activeSlides.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
     }, 7000);
     return () => clearInterval(interval);
-  }, [slides.length]);
+  }, [activeSlides.length]);
 
   const handleMouseMove = (e) => {
     if (!heroRef.current) return;
@@ -70,8 +104,8 @@ export default function HeroSection() {
     setMousePosition({ x, y });
   };
 
-  const nextSlide = () => setCurrentSlide((p) => (p + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((p) => (p - 1 + slides.length) % slides.length);
+  const nextSlide = () => setCurrentSlide((p) => (p + 1) % activeSlides.length);
+  const prevSlide = () => setCurrentSlide((p) => (p - 1 + activeSlides.length) % activeSlides.length);
 
   // Mobile Touch Swipe Handlers
   const handleTouchStart = (e) => {
@@ -95,7 +129,7 @@ export default function HeroSection() {
       className="relative w-full h-[600px] sm:h-[650px] md:h-[780px] bg-[#110722] flex items-center justify-center overflow-hidden group/hero select-none"
     >
       {/* Background Slides with continuous soft zoom & parallax */}
-      {slides.map((slide, idx) => (
+      {activeSlides.map((slide, idx) => (
         <div 
           key={idx}
           className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}
@@ -109,7 +143,12 @@ export default function HeroSection() {
           <img 
             src={slide.src} 
             alt={slide.title} 
-            className="w-full h-full object-cover object-right opacity-40 sm:opacity-55 filter brightness-[0.7] saturate-[1.1] contrast-[1.05]"
+            className="hidden sm:block w-full h-full object-cover object-right opacity-40 sm:opacity-55 filter brightness-[0.7] saturate-[1.1] contrast-[1.05]"
+          />
+          <img 
+            src={slide.mobileSrc || slide.src} 
+            alt={slide.title} 
+            className="block sm:hidden w-full h-full object-cover object-center opacity-40 filter brightness-[0.7] saturate-[1.1] contrast-[1.05]"
           />
         </div>
       ))}
@@ -151,8 +190,8 @@ export default function HeroSection() {
         <div className="max-w-2xl pt-12 text-left">
           
           {/* Animated Hero Header/Title Block */}
-          <div className="relative min-h-[220px] sm:min-h-[260px] md:min-h-[300px] w-full">
-            {slides.map((slide, idx) => (
+          <div className="relative min-h-[260px] sm:min-h-[300px] md:min-h-[340px] w-full">
+            {activeSlides.map((slide, idx) => (
               <div 
                 key={idx}
                 className={`absolute inset-0 transition-all duration-1000 transform ${
@@ -161,7 +200,7 @@ export default function HeroSection() {
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-[#eebf63]/30 rounded-full mb-5 backdrop-blur-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#eebf63] animate-pulse"></span>
-                  <span className="text-[9px] tracking-[0.25em] font-bold text-[#eebf63] uppercase">Luxury Campaign</span>
+                  <span className="text-[9px] tracking-[0.25em] font-bold text-[#eebf63] uppercase">{slide.luxury_tag || "Luxury Campaign"}</span>
                 </div>
 
                 <h2 className="text-[clamp(1.85rem,7.5vw,4rem)] font-serif text-transparent bg-clip-text bg-gradient-to-r from-[#fce2a6] via-[#eebf63] to-[#d4a54c] font-medium leading-[1.1] mb-4 sm:mb-5 drop-shadow-[0_0_15px_rgba(238,191,99,0.25)] select-none">
@@ -169,9 +208,15 @@ export default function HeroSection() {
                   <span className="text-white drop-shadow-md block mt-1">{slide.subtitle}</span>
                 </h2>
                 
-                <p className="text-gray-300 text-xs sm:text-sm md:text-base font-light max-w-[90vw] sm:max-w-lg leading-relaxed tracking-wide">
+                <p className="text-gray-300 text-xs sm:text-sm md:text-base font-light max-w-[90vw] sm:max-w-lg leading-relaxed tracking-wide mb-8">
                   {slide.desc}
                 </p>
+
+                {slide.cta_text && (
+                  <a href={slide.cta_url || '/collection'} className="inline-flex items-center justify-center px-8 py-3 bg-transparent border border-[#eebf63] text-[#eebf63] hover:bg-[#eebf63] hover:text-[#110722] rounded-full text-xs font-bold uppercase tracking-widest transition-colors duration-300 shadow-[0_0_15px_rgba(238,191,99,0.15)]">
+                    {slide.cta_text}
+                  </a>
+                )}
               </div>
             ))}
           </div>
@@ -204,7 +249,7 @@ export default function HeroSection() {
       <div className="absolute left-4 right-4 bottom-6 md:left-auto md:right-8 md:bottom-12 z-30 flex items-center justify-between md:justify-end gap-5 bg-[#110722]/60 backdrop-blur-md md:bg-transparent p-2.5 md:p-0 rounded-full border border-white/10 md:border-none">
         {/* Animated Pagination Dots */}
         <div className="flex gap-2 ml-4">
-          {slides.map((_, idx) => (
+          {activeSlides.map((_, idx) => (
             <div 
               key={idx}
               onClick={() => setCurrentSlide(idx)}

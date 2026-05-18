@@ -51,13 +51,12 @@ const jsonLd = {
 };
 
 import SmoothScrolling from '@/components/layout/SmoothScrolling';
-import CustomCursor from '@/components/ui/CustomCursor';
 
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased cursor-none`}
+      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         {/* JSON-LD for Local Business SEO */}
@@ -65,7 +64,6 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <CustomCursor />
         <SmoothScrolling>
           <CartProvider>
             {children}
