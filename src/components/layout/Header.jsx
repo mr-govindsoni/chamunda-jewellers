@@ -5,7 +5,6 @@ import LiveRates from '@/components/LiveRates';
 import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, MessageCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import SearchOverlay from '@/components/ui/SearchOverlay';
-import CartDrawer from '@/components/ui/CartDrawer';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/auth/AuthModal';
@@ -13,7 +12,7 @@ import AuthModal from '@/components/auth/AuthModal';
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
-  const { setIsSearchOpen, setIsCartOpen, cartCount } = useCart();
+  const { setIsSearchOpen } = useCart();
   const { user, setIsAuthModalOpen, logout } = useAuth();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -137,13 +136,6 @@ export default function Header() {
                 </button>
               )}
             </div>
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className="text-gray-700 hover:text-[#d4a54c] active:scale-90 transition-transform relative p-1.5"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-0.5 right-0.5 bg-[#1f163b] text-[#eebf63] text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#eebf63]/50 shadow-sm">{cartCount}</span>
-            </button>
           </div>
         </div>
 
@@ -312,13 +304,6 @@ export default function Header() {
                 </button>
               )}
             </div>
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300 relative group"
-            >
-              <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-              <span className="absolute -top-1.5 -right-2 bg-[#1f163b] text-[#eebf63] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-lg border border-[#eebf63]/50">{cartCount}</span>
-            </button>
           </div>
         </div>
       </div>
@@ -479,7 +464,6 @@ export default function Header() {
         </div>
       </div>
       <SearchOverlay />
-      <CartDrawer />
       <AuthModal />
     </motion.header>
   );

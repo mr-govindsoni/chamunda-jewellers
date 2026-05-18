@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { User, MapPin, Package, Heart, LogOut, Edit2, ShieldCheck, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function AccountPage() {
+function AccountContent() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -193,5 +193,17 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[70vh] flex items-center justify-center bg-[#fafafa]">
+        <div className="w-8 h-8 border-2 border-[#1f163b]/20 border-t-[#d4a54c] rounded-full animate-spin"></div>
+      </div>
+    }>
+      <AccountContent />
+    </Suspense>
   );
 }
