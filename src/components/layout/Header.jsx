@@ -308,6 +308,26 @@ export default function Header() {
         </div>
       </div>
 
+      {/* Secondary Quick Filter Pills Bar */}
+      <div className="w-full border-t border-gray-100 bg-white/95 backdrop-blur-md py-3 shadow-sm">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 overflow-x-auto scroll-smooth pb-1 -mb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {["ALL", "ANTIQUE RINGS", "DIAMOND RINGS", "POLKI RINGS", "BRIDAL RINGS", "DAILY WEAR", "TEMPLE RINGS", "MODERN RINGS"].map((pill, index) => (
+              <button
+                key={pill}
+                className={`whitespace-nowrap px-5 py-2 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase transition-all duration-300 ${
+                  index === 0
+                    ? 'bg-[#1f163b] text-[#eebf63] shadow-md border border-[#1f163b]'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:border-[#eebf63]/50 hover:text-[#1f163b] hover:bg-[#fafafa]'
+                }`}
+              >
+                {pill}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Immersive Full-Screen Mobile Menu Drawer */}
       <div 
         className={`fixed inset-0 z-50 md:hidden bg-gradient-to-b from-[#110722] via-[#1a0b2e] to-[#0d041a] backdrop-blur-[18px] text-white flex flex-col transition-all duration-500 ease-in-out ${
