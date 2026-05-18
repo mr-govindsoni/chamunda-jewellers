@@ -46,17 +46,49 @@ export default function EstimateCalculator() {
     setMounted(true);
     async function fetchRates() {
       try {
-        const res = await fetch('/api/get-rates');
-        if (!res.ok) throw new Error('Failed to fetch');
-        const data = await res.json();
-        setRates(data);
+        const [goldRes, silverRes, forexRes] = await Promise.all([
+          fetch('https://api.gold-api.com/price/XAU'),
+          fetch('https://api.gold-api.com/price/XAG'),
+          fetch('https://api.exchangerate-api.com/v4/latest/USD').catch(() => null)
+        ]);
+
+        const goldData = await goldRes.json();
+        const silverData = await silverRes.json();
+        
+        let usdinr = 83.50;
+        if (forexRes && forexRes.ok) {
+          const forexData = await forexRes.json();
+          if (forexData?.rates?.INR) {
+            usdinr = forexData.rates.INR;
+          }
+        }
+
+        const calculatePerGram = (rawPrice) => {
+          let inrPrice = (rawPrice * usdinr) / 31.103;
+          return inrPrice * 1.16; // Retail premium
+        };
+
+        const gold24kPerGram = calculatePerGram(goldData.price);
+        const gold22kPerGram = gold24kPerGram * 0.916;
+        const silverPerGram = calculatePerGram(silverData.price);
+
+        setRates({
+          gold24k: gold24kPerGram,
+          gold22k: gold22kPerGram,
+          silver: silverPerGram,
+          trend: goldData.ch >= 0 ? `▲ +${(calculatePerGram(goldData.ch) * 10).toFixed(2)}` : `▼ ${(calculatePerGram(goldData.ch) * 10).toFixed(2)}`,
+          isPositive: goldData.ch >= 0
+        });
       } catch (err) {
         console.error("Failed to load rates");
       } finally {
         setLoading(false);
       }
     }
+    
     fetchRates();
+    const interval = setInterval(fetchRates, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const getWeightInGrams = () => {
@@ -68,15 +100,7 @@ export default function EstimateCalculator() {
 
   const getRatePerGram = () => {
     if (!rates) return 0;
-    let pricePerOz = 0;
-    if (metal === 'gold24k') {
-      pricePerOz = rates['XAU/INR']?.price || 0;
-    } else if (metal === 'gold22k') {
-      pricePerOz = (rates['XAU/INR']?.price || 0) * (22 / 24);
-    } else if (metal === 'silver') {
-      pricePerOz = rates['XAG/INR']?.price || 0;
-    }
-    return pricePerOz / 31.1034768; 
+    return rates[metal] || 0;
   };
 
   const weightInGrams = getWeightInGrams();
@@ -180,7 +204,7 @@ export default function EstimateCalculator() {
             <span className="text-xl font-bold text-[#eebf63] drop-shadow-md">
               {mounted ? formatCurrency(ratePerGram) : '...'} <span className="text-xs text-gray-500 font-normal tracking-widest">/ GM</span>
             </span>
-            {mounted && rates && <span className="text-[10px] text-green-400 font-bold tracking-widest flex items-center px-2 py-1 bg-green-400/10 rounded border border-green-400/20">▲ +8.00</span>}
+            {mounted && rates && <span className={`text-[10px] font-bold tracking-widest flex items-center px-2 py-1 rounded border ${rates.isPositive ? 'text-green-400 bg-green-400/10 border-green-400/20' : 'text-red-400 bg-red-400/10 border-red-400/20'}`}>{rates.trend || '▲ +8.00'}</span>}
           </div>
           <div className="flex items-center gap-2 text-[10px] text-gray-500 mt-3 sm:mt-0 w-full sm:w-auto justify-end uppercase tracking-widest font-medium relative z-10">
             <span>Live Sync</span>
