@@ -98,11 +98,12 @@ export default function LiveRates({ variant = 'ticker' }) {
     if (!data) return null;
     
     const price = calculateRates(data.price, metal, type);
-    const high = calculateRates(data.high_price, metal, type);
-    const low = calculateRates(data.low_price, metal, type);
-    const ch = calculateRates(data.ch, metal, type);
+    const high = calculateRates(data.high_price || data.price, metal, type);
+    const low = calculateRates(data.low_price || data.price, metal, type);
+    const chRaw = data.ch || 0;
+    const ch = calculateRates(chRaw, metal, type);
 
-    const isPositive = data.ch >= 0;
+    const isPositive = chRaw >= 0;
     const Icon = isPositive ? TrendingUp : TrendingDown;
     const colorClass = isPositive ? 'text-green-400' : 'text-red-400';
     const bgClass = isPositive ? 'bg-green-400/10' : 'bg-red-400/10';
