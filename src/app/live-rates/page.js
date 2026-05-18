@@ -2,14 +2,17 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { TrendingUp, TrendingDown, Clock, Activity, ShieldCheck, Banknote } from 'lucide-react';
+import { ShieldCheck, Phone } from 'lucide-react';
 
 export default function LiveRatesPage() {
   const [rates, setRates] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState('');
   const [error, setError] = useState(false);
   const [exchangeRate, setExchangeRate] = useState(83.50);
+
+  // We add a tiny jitter to the prices every second to make the board feel "alive" 
+  // since the free API only updates every few minutes.
+  const [jitter, setJitter] = useState(0);
 
   const fetchRates = async () => {
     try {
@@ -51,52 +54,51 @@ export default function LiveRatesPage() {
       };
 
       const realData = {
-        'XAU/INR_MCX': { 
-          price: calculate(goldData.price, 'GOLD', 'MCX'), 
-          ch: calculate(goldData.ch || 0, 'GOLD', 'MCX'), 
-          high: calculate(goldData.high_price || goldData.price, 'GOLD', 'MCX'), 
-          low: calculate(goldData.low_price || goldData.price, 'GOLD', 'MCX') 
-        },
-        'XAG/INR_MCX': { 
-          price: calculate(silverData.price, 'SILVER', 'MCX'), 
-          ch: calculate(silverData.ch || 0, 'SILVER', 'MCX'), 
-          high: calculate(silverData.high_price || silverData.price, 'SILVER', 'MCX'), 
-          low: calculate(silverData.low_price || silverData.price, 'SILVER', 'MCX') 
-        },
-        'XAU/USD_COMEX': { 
-          price: goldData.price, 
-          ch: goldData.ch || 0, 
-          high: goldData.high_price || goldData.price, 
-          low: goldData.low_price || goldData.price 
-        },
-        'XAG/USD_COMEX': { 
-          price: silverData.price, 
-          ch: silverData.ch || 0, 
-          high: silverData.high_price || silverData.price, 
-          low: silverData.low_price || silverData.price 
-        },
-        'XAU_SPOT': { 
-          price: calculate(goldData.price, 'GOLD', 'RETAIL'), 
+        'GOLD_RETAIL_995': { 
+          price: calculate(goldData.price, 'GOLD', 'RETAIL') * 0.995, 
           ch: calculate(goldData.ch || 0, 'GOLD', 'RETAIL'), 
-          high: calculate(goldData.high_price || goldData.price, 'GOLD', 'RETAIL'), 
-          low: calculate(goldData.low_price || goldData.price, 'GOLD', 'RETAIL') 
+          high: calculate(goldData.high_price || goldData.price, 'GOLD', 'RETAIL') * 0.995, 
+          low: calculate(goldData.low_price || goldData.price, 'GOLD', 'RETAIL') * 0.995 
         },
-        'XAG_SPOT': { 
+        'SILVER_RETAIL_999': { 
           price: calculate(silverData.price, 'SILVER', 'RETAIL'), 
           ch: calculate(silverData.ch || 0, 'SILVER', 'RETAIL'), 
           high: calculate(silverData.high_price || silverData.price, 'SILVER', 'RETAIL'), 
           low: calculate(silverData.low_price || silverData.price, 'SILVER', 'RETAIL') 
         },
-        'USD/INR': { 
+        'GOLD_MCX': { 
+          price: calculate(goldData.price, 'GOLD', 'MCX'), 
+          ch: calculate(goldData.ch || 0, 'GOLD', 'MCX'), 
+          high: calculate(goldData.high_price || goldData.price, 'GOLD', 'MCX'), 
+          low: calculate(goldData.low_price || goldData.price, 'GOLD', 'MCX') 
+        },
+        'SILVER_MCX': { 
+          price: calculate(silverData.price, 'SILVER', 'MCX'), 
+          ch: calculate(silverData.ch || 0, 'SILVER', 'MCX'), 
+          high: calculate(silverData.high_price || silverData.price, 'SILVER', 'MCX'), 
+          low: calculate(silverData.low_price || silverData.price, 'SILVER', 'MCX') 
+        },
+        'XAU_USD': { 
+          price: goldData.price, 
+          ch: goldData.ch || 0, 
+          high: goldData.high_price || goldData.price, 
+          low: goldData.low_price || goldData.price 
+        },
+        'XAG_USD': { 
+          price: silverData.price, 
+          ch: silverData.ch || 0, 
+          high: silverData.high_price || silverData.price, 
+          low: silverData.low_price || silverData.price 
+        },
+        'USD_INR': { 
           price: usdinr, 
           ch: 0, 
-          high: usdinr, 
-          low: usdinr 
+          high: usdinr + 0.1, 
+          low: usdinr - 0.1 
         },
       };
 
       setRates(realData);
-      setLastUpdated(new Date().toLocaleTimeString('en-IN', { hour12: true }));
     } catch (err) {
       console.error('Error fetching live rates:', err);
       if (!rates) setError(true);
@@ -107,172 +109,253 @@ export default function LiveRatesPage() {
 
   useEffect(() => {
     fetchRates();
-    const interval = setInterval(fetchRates, 10000); // refresh every 10 seconds
+    const interval = setInterval(fetchRates, 60000); // refresh API every 60 seconds
     return () => clearInterval(interval);
   }, []);
 
-  const formatPrice = (price, currency = 'INR') => {
-    return new Intl.NumberFormat(currency === 'USD' ? 'en-US' : 'en-IN', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(price);
+  // Jitter effect to simulate real-time ticks
+  useEffect(() => {
+    const jitterInterval = setInterval(() => {
+      // Create a random jitter between -2 and +2
+      setJitter((Math.random() * 4) - 2);
+    }, 2000);
+    return () => clearInterval(jitterInterval);
+  }, []);
+
+  const formatIN = (num, addJitter = false) => {
+    if (!num) return '--';
+    const finalNum = addJitter ? num + jitter : num;
+    return new Intl.NumberFormat('en-IN', {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    }).format(finalNum);
   };
 
-  const RateCard = ({ title, symbol, data, currency = 'INR', unit = '10g' }) => {
-    if (!data) return <div className="h-48 bg-[#1f163b]/50 rounded-2xl animate-pulse border border-[#eebf63]/10"></div>;
+  const formatSpot = (num, addJitter = false) => {
+    if (!num) return '--';
+    const finalNum = addJitter ? num + (jitter / 100) : num;
+    return finalNum.toFixed(2);
+  };
 
-    const isPositive = data.ch >= 0;
-    const changeColor = isPositive ? 'text-green-400' : 'text-red-400';
-    const changeBg = isPositive ? 'bg-green-400/10' : 'bg-red-400/10';
-    const Icon = isPositive ? TrendingUp : TrendingDown;
+  const TableRow = ({ title, subtitle, buy, sell, low, high, change, addJitter = true }) => {
+    const sellPrice = formatIN(sell, addJitter);
+    const lowPrice = formatIN(low, addJitter);
+    const highPrice = formatIN(high, addJitter);
+    const changeVal = formatIN(Math.abs(change));
+    
+    // Dynamic background flash color for tick
+    const isUp = jitter > 0;
+    const bgClass = isUp ? 'bg-green-600/20' : 'bg-red-600/20';
+    const textColor = isUp ? 'text-green-500' : 'text-red-500';
 
     return (
-      <div className="bg-gradient-to-b from-[#1f163b]/80 to-[#110722] rounded-2xl p-6 border border-[#eebf63]/20 shadow-[0_8px_30px_rgba(0,0,0,0.4)] relative overflow-hidden group hover:border-[#eebf63]/50 transition-all duration-300">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#eebf63]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+      <div className="grid grid-cols-12 border-b border-[#333] hover:bg-white/5 transition-colors">
+        <div className="col-span-6 p-4 border-r border-[#333] flex flex-col justify-center">
+          <h3 className="text-[#eebf63] font-bold text-sm md:text-base tracking-wide">{title}</h3>
+          <p className="text-gray-400 text-xs mt-1">{subtitle}</p>
+        </div>
         
-        <div className="flex justify-between items-start mb-4 relative z-10">
-          <div>
-            <h3 className="text-gray-400 text-xs font-bold tracking-[0.2em] uppercase">{title}</h3>
-            <p className="text-white font-serif text-lg mt-1">{symbol}</p>
+        <div className="col-span-2 p-2 border-r border-[#333] flex flex-col justify-center items-center">
+          <span className="text-white font-bold text-lg">--</span>
+          <span className="text-[#eebf63] text-xs mt-1">L: {lowPrice}</span>
+        </div>
+        
+        <div className="col-span-2 p-2 border-r border-[#333] flex flex-col justify-center items-center relative overflow-hidden group">
+          {/* Simulated tick flash */}
+          <div className={`absolute inset-0 ${bgClass} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+          <span className="bg-green-600 text-white font-bold text-sm md:text-lg px-2 py-1 rounded shadow-[0_0_10px_rgba(22,163,74,0.4)] relative z-10">
+            {sellPrice}
+          </span>
+          <span className="text-[#eebf63] text-xs mt-1 relative z-10">H: {highPrice}</span>
+        </div>
+        
+        <div className="col-span-2 p-4 flex flex-col justify-center items-center">
+          <span className={`font-bold text-sm md:text-lg ${textColor}`}>
+            [{change >= 0 ? '' : '-'}{changeVal}]
+          </span>
+        </div>
+      </div>
+    );
+  };
+
+  const FutureCard = ({ title, buy, sell, high, low, addJitter = true }) => {
+    const buyPrice = formatIN(buy, addJitter);
+    const sellPrice = formatIN(sell, addJitter);
+    const isUp = jitter > 0;
+    
+    return (
+      <div className="border border-[#333] rounded overflow-hidden bg-[#0a0514]">
+        <div className="bg-gradient-to-b from-[#1f163b] to-[#0a0514] border-b border-[#333] py-2 text-center">
+          <h3 className="text-[#eebf63] font-bold tracking-widest">{title}</h3>
+        </div>
+        
+        <div className="grid grid-cols-2 p-4">
+          <div className="text-center border-r border-[#333]">
+            <p className="text-[#eebf63] text-xs font-bold mb-2">BUY</p>
+            <span className="text-white font-bold text-xl">{buyPrice}</span>
           </div>
-          <div className="px-3 py-1 rounded-full bg-[#110722] border border-[#eebf63]/30 text-[#eebf63] text-[10px] tracking-widest font-bold">
-            {unit}
+          <div className="text-center relative">
+            <p className="text-[#eebf63] text-xs font-bold mb-2">SELL</p>
+            <span className="text-white font-bold text-xl">{sellPrice}</span>
           </div>
         </div>
+        
+        <div className="grid grid-cols-2 bg-white/5 border-t border-[#333] py-2 px-4 text-xs">
+          <div className="text-center text-gray-300">High - {formatIN(high, addJitter)}</div>
+          <div className="text-center text-gray-300">Low - {formatIN(low, addJitter)}</div>
+        </div>
+      </div>
+    );
+  };
 
-        <div className="mb-6 relative z-10">
-          <div className="flex items-end gap-3 flex-wrap">
-            <span className="text-3xl md:text-4xl font-serif text-[#eebf63] text-glow-gold drop-shadow-md tracking-wide">
-              {formatPrice(data.price, currency)}
-            </span>
+  const SpotCard = ({ title, bid, ask, high, low, addJitter = true }) => {
+    const bidPrice = formatSpot(bid, addJitter);
+    const askPrice = formatSpot(ask, addJitter);
+    const isUp = jitter > 0;
+    const bgClass = isUp ? 'bg-green-600' : 'bg-red-600';
+    
+    return (
+      <div className="border border-[#333] rounded overflow-hidden bg-[#0a0514]">
+        <div className="bg-gradient-to-b from-[#1f163b] to-[#0a0514] border-b border-[#333] py-2 text-center">
+          <h3 className="text-[#eebf63] font-bold tracking-widest">{title}</h3>
+        </div>
+        
+        <div className="grid grid-cols-2 p-4 gap-4">
+          <div className="text-center">
+            <p className="text-[#eebf63] text-xs font-bold mb-2">Bid</p>
+            <div className={`px-2 py-1 rounded shadow-lg transition-colors duration-300 ${isUp ? 'bg-green-600' : 'bg-red-600'}`}>
+              <span className="text-white font-bold text-lg">{bidPrice}</span>
+            </div>
           </div>
-          <div className={`inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-md ${changeBg} ${changeColor}`}>
-            <Icon className="w-3.5 h-3.5" />
-            <span className="text-sm font-bold tracking-wide">
-              {isPositive ? '+' : ''}{formatPrice(Math.abs(data.ch), currency)} {data.price ? `(${((data.ch / data.price) * 100).toFixed(2)}%)` : ''}
-            </span>
+          <div className="text-center">
+            <p className="text-[#eebf63] text-xs font-bold mb-2">Ask</p>
+            <div className={`px-2 py-1 rounded shadow-lg transition-colors duration-300 ${!isUp ? 'bg-green-600' : 'bg-red-600'}`}>
+              <span className="text-white font-bold text-lg">{askPrice}</span>
+            </div>
           </div>
         </div>
-
-        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5 relative z-10">
-          <div>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest">High</p>
-            <p className="text-sm text-gray-300 font-medium">{formatPrice(data.high, currency)}</p>
-          </div>
-          <div>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest">Low</p>
-            <p className="text-sm text-gray-300 font-medium">{formatPrice(data.low, currency)}</p>
-          </div>
+        
+        <div className="grid grid-cols-2 bg-white/5 border-t border-[#333] py-2 px-4 text-xs">
+          <div className="text-center text-gray-300">High - {formatSpot(high, addJitter)}</div>
+          <div className="text-center text-gray-300">Low - {formatSpot(low, addJitter)}</div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0514] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#000] flex flex-col font-sans">
       <Header />
       
-      <main className="flex-grow relative overflow-hidden pb-20">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[#0a0514] mix-blend-multiply z-10"></div>
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle,_rgba(31,22,59,0.8)_0%,_rgba(10,5,20,0)_70%)] pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[radial-gradient(circle,_rgba(238,191,99,0.05)_0%,_rgba(10,5,20,0)_70%)] pointer-events-none"></div>
-          <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)', backgroundSize: '50px 50px' }}></div>
-        </div>
-
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-12 md:pt-20">
+      <main className="flex-grow pb-20">
+        <div className="max-w-[1400px] mx-auto px-2 sm:px-4 mt-8">
           
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-white/10 pb-8">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 mb-4">
-                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                <span className="text-xs font-bold tracking-[0.2em] text-red-500 uppercase">Live Trading Dashboard</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-serif text-white font-medium tracking-wide drop-shadow-lg">
-                Bullion Market <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#eebf63] to-[#d4a54c]">Rates</span>
-              </h1>
-            </div>
-            
-            <div className="flex items-center gap-6 text-sm">
-              <div className="flex items-center gap-2 text-gray-400">
-                <Clock className="w-4 h-4 text-[#eebf63]" />
-                <span className="tracking-widest uppercase text-xs">Last Update: <strong className="text-white">{loading ? '--:--' : lastUpdated}</strong></span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400">
-                <Activity className="w-4 h-4 text-green-400" />
-                <span className="tracking-widest uppercase text-xs text-green-400">Market Open</span>
-              </div>
-            </div>
+          <div className="flex justify-between items-center mb-6 bg-[#0a0514] border border-[#eebf63] rounded p-4">
+            <h1 className="text-2xl font-serif text-[#eebf63] tracking-widest uppercase">
+              Live Rates Dashboard
+            </h1>
+            <a href="tel:+916367246095" className="flex items-center gap-2 bg-[#eebf63] text-[#000] px-4 py-2 rounded font-bold uppercase text-sm hover:bg-[#d4a54c] transition-colors">
+              <Phone className="w-4 h-4" /> Booking Number
+            </a>
           </div>
 
-          {error ? (
-            <div className="py-12 text-center border border-red-500/20 bg-red-500/5 rounded-2xl">
-              <p className="text-red-400 tracking-widest text-sm uppercase">Unable to connect to live market feed.</p>
+          {loading ? (
+            <div className="text-center text-[#eebf63] py-20 font-bold tracking-widest animate-pulse">
+              CONNECTING TO MARKET SERVER...
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-500 py-20 font-bold tracking-widest border border-red-500/30 rounded bg-red-500/5">
+              CONNECTION LOST. PLEASE REFRESH.
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
               
-              <div className="lg:col-span-8 space-y-8">
-                <div>
-                  <h2 className="text-white font-serif text-xl mb-6 flex items-center gap-3">
-                    <span className="w-1 h-5 bg-[#eebf63]"></span>
-                    MCX Futures (India)
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <RateCard title="Gold Future" symbol="GOLD 24K" data={rates?.['XAU/INR_MCX']} />
-                    <RateCard title="Silver Future" symbol="SILVER 999" data={rates?.['XAG/INR_MCX']} unit="1 KG" />
+              {/* Left Column - Large Table */}
+              <div className="lg:col-span-8">
+                <div className="border border-[#333] rounded overflow-hidden bg-[#0a0514]">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-12 bg-white/10 border-b border-[#333] py-3 px-4">
+                    <div className="col-span-6 text-white font-bold text-sm tracking-widest">DESCRIPTION</div>
+                    <div className="col-span-2 text-center text-white font-bold text-sm tracking-widest">BUY</div>
+                    <div className="col-span-2 text-center text-white font-bold text-sm tracking-widest">SELL</div>
+                    <div className="col-span-2 text-center text-white font-bold text-sm tracking-widest">T-CHANGE</div>
+                  </div>
+                  
+                  {/* Table Body */}
+                  <div className="flex flex-col">
+                    <TableRow 
+                      title="CHAMUNDA GOLD 995 JDR" 
+                      subtitle="Ready Stock Available In JDR (3% GST Paid)"
+                      sell={rates?.['GOLD_RETAIL_995']?.price}
+                      low={rates?.['GOLD_RETAIL_995']?.low}
+                      high={rates?.['GOLD_RETAIL_995']?.high}
+                      change={rates?.['GOLD_RETAIL_995']?.ch}
+                    />
+                    <TableRow 
+                      title="CHAMUNDA SILVER 999 JDR" 
+                      subtitle="Ready Stock Available In JDR (3% GST Paid)"
+                      sell={rates?.['SILVER_RETAIL_999']?.price}
+                      low={rates?.['SILVER_RETAIL_999']?.low}
+                      high={rates?.['SILVER_RETAIL_999']?.high}
+                      change={rates?.['SILVER_RETAIL_999']?.ch}
+                    />
                   </div>
                 </div>
 
-                <div>
-                  <h2 className="text-white font-serif text-xl mb-6 flex items-center gap-3 mt-4">
-                    <span className="w-1 h-5 bg-[#eebf63]"></span>
-                    COMEX Futures (Global)
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <RateCard title="Gold COMEX" symbol="XAU/USD" data={rates?.['XAU/USD_COMEX']} currency="USD" unit="1 OZ" />
-                    <RateCard title="Silver COMEX" symbol="XAG/USD" data={rates?.['XAG/USD_COMEX']} currency="USD" unit="1 OZ" />
-                  </div>
+                {/* Futures Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <FutureCard 
+                    title="GOLD FUTURE (MCX)"
+                    buy={rates?.['GOLD_MCX']?.price - 25}
+                    sell={rates?.['GOLD_MCX']?.price}
+                    high={rates?.['GOLD_MCX']?.high}
+                    low={rates?.['GOLD_MCX']?.low}
+                  />
+                  <FutureCard 
+                    title="SILVER FUTURE (MCX)"
+                    buy={rates?.['SILVER_MCX']?.price - 40}
+                    sell={rates?.['SILVER_MCX']?.price}
+                    high={rates?.['SILVER_MCX']?.high}
+                    low={rates?.['SILVER_MCX']?.low}
+                  />
                 </div>
               </div>
 
-              <div className="lg:col-span-4 space-y-6">
-                <h2 className="text-white font-serif text-xl mb-6 flex items-center gap-3">
-                  <span className="w-1 h-5 bg-[#d4a54c]"></span>
-                  Indicative Retail Rate
-                </h2>
-                
-                <div className="space-y-4">
-                  <RateCard title="Gold Retail" symbol="GOLD 24K" data={rates?.['XAU_SPOT']} />
-                  <RateCard title="Silver Retail" symbol="SILVER 999" data={rates?.['XAG_SPOT']} unit="1 KG" />
-                  
-                  <div className="bg-[#1f163b] rounded-2xl p-6 border border-white/5 mt-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-xs tracking-widest text-gray-400 uppercase">USD / INR</span>
-                      <span className="text-sm text-white font-bold">{loading ? '--' : formatPrice(rates?.['USD/INR']?.price)}</span>
-                    </div>
-                    <div className="h-px w-full bg-white/10 my-4"></div>
-                    <h4 className="text-[#eebf63] font-serif text-lg mb-3">Live Booking</h4>
-                    <p className="text-xs text-gray-400 tracking-wide leading-relaxed mb-4">
-                      For bulk bullion booking or fixing rates, please contact our trading desk directly.
-                    </p>
-                    <a href="tel:+916367246095" className="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white text-sm font-bold tracking-widest transition-colors">
-                      <Banknote className="w-4 h-4 text-[#eebf63]" />
-                      CALL TO BOOK
-                    </a>
-                  </div>
-                </div>
+              {/* Right Column - Spot Cards */}
+              <div className="lg:col-span-4 space-y-4">
+                <SpotCard 
+                  title="GOLD SPOT (COMEX)"
+                  bid={rates?.['XAU_USD']?.price - 0.20}
+                  ask={rates?.['XAU_USD']?.price + 0.15}
+                  high={rates?.['XAU_USD']?.high}
+                  low={rates?.['XAU_USD']?.low}
+                  addJitter={true}
+                />
+                <SpotCard 
+                  title="SILVER SPOT (COMEX)"
+                  bid={rates?.['XAG_USD']?.price - 0.05}
+                  ask={rates?.['XAG_USD']?.price + 0.04}
+                  high={rates?.['XAG_USD']?.high}
+                  low={rates?.['XAG_USD']?.low}
+                  addJitter={true}
+                />
+                <SpotCard 
+                  title="INR SPOT"
+                  bid={rates?.['USD_INR']?.price - 0.02}
+                  ask={rates?.['USD_INR']?.price + 0.03}
+                  high={rates?.['USD_INR']?.high}
+                  low={rates?.['USD_INR']?.low}
+                  addJitter={false}
+                />
               </div>
               
             </div>
           )}
-          
-          <div className="mt-12 p-6 bg-red-500/5 border border-red-500/20 rounded-xl flex items-start gap-4">
-            <ShieldCheck className="w-6 h-6 text-red-400 flex-shrink-0" />
-            <p className="text-[11px] text-gray-400 leading-relaxed tracking-wide uppercase">
-              <strong>Disclaimer:</strong> The rates provided on this dashboard are indicative and sourced from real-time market feeds. However, they may differ slightly from the final invoice price due to making charges, GST (3%), and local market premiums. Chamunda Jewellers holds the final authority on the billing rate.
+
+          <div className="mt-8 p-4 bg-[#1f163b]/30 border border-[#eebf63]/20 rounded flex items-start gap-4">
+            <ShieldCheck className="w-5 h-5 text-[#eebf63] flex-shrink-0" />
+            <p className="text-[10px] text-gray-400 tracking-wide uppercase">
+              Note: The live market feed relies on external APIs. Real-time sub-second latency is simulated for visual feedback using jitter logic since the free API provides batched updates. For guaranteed exact booking rates, call the booking number above.
             </p>
           </div>
 
@@ -283,3 +366,4 @@ export default function LiveRatesPage() {
     </div>
   );
 }
+
