@@ -412,16 +412,24 @@ export default function BannerManagement() {
               {/* Realtime Preview Section */}
               <div className="bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 shadow-xl relative aspect-[21/9] sm:aspect-[21/7] max-h-[300px]">
                 {formData.desktop_image && <img src={formData.desktop_image} className="absolute inset-0 w-full h-full object-cover opacity-50" alt="Preview" />}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent p-8 md:p-12 flex flex-col justify-center">
-                  <div className="inline-block px-3 py-1 bg-white/10 border border-[#eebf63]/50 rounded-full mb-4 backdrop-blur-sm w-max">
-                    <span className="text-[9px] tracking-[0.2em] font-bold text-[#eebf63] uppercase">{formData.luxury_tag || 'Luxury Tag'}</span>
+                <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/85 via-black/60 to-transparent p-8 md:p-12 flex flex-col justify-center select-none">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-[#eebf63]/30 rounded-full mb-4 backdrop-blur-sm w-max">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#eebf63] animate-pulse"></span>
+                    <span className="text-[9px] tracking-[0.25em] font-bold text-[#eebf63] uppercase">{formData.luxury_tag || 'Luxury Tag'}</span>
                   </div>
-                  <h2 className="text-3xl md:text-5xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-[#fce2a6] to-[#d4a54c] mb-2">{formData.title || 'Banner Title'}</h2>
-                  <h3 className="text-xl text-white font-serif mb-4">{formData.subtitle || 'Banner Subtitle'}</h3>
-                  <p className="text-gray-300 text-sm max-w-md hidden md:block mb-6">{formData.description || 'Description text will appear here.'}</p>
-                  <button type="button" className="px-6 py-2 bg-transparent border border-[#eebf63] text-[#eebf63] rounded-full text-xs font-bold uppercase tracking-widest w-max">
-                    {formData.cta_text || 'Button Text'}
-                  </button>
+                  
+                  <h2 className="text-2xl md:text-4xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-[#fce2a6] via-[#eebf63] to-[#d4a54c] font-medium leading-[1.1] mb-4 drop-shadow-[0_0_15px_rgba(238,191,99,0.25)]">
+                    <span className="block">{formData.title || 'Banner Title'}</span>
+                    <span className="text-white block mt-1 text-base md:text-xl font-light drop-shadow-md">{formData.subtitle || 'Banner Subtitle'}</span>
+                  </h2>
+
+                  <p className="text-gray-300 text-[10px] md:text-xs max-w-sm hidden md:block mb-6 leading-relaxed font-light">{formData.description || 'Description text will appear here.'}</p>
+                  
+                  {formData.cta_text && (
+                    <button type="button" className="px-6 py-2.5 bg-transparent border border-[#eebf63] text-[#eebf63] rounded-full text-[9px] font-bold uppercase tracking-widest w-max">
+                      {formData.cta_text}
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -471,13 +479,34 @@ export default function BannerManagement() {
                       <Monitor className="w-3.5 h-3.5" /> Desktop Background Image
                     </label>
                     <div className="space-y-3">
-                      <input 
-                        type="text" 
-                        value={formData.desktop_image} 
-                        onChange={e => setFormData({...formData, desktop_image: e.target.value})} 
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" 
-                        placeholder="Enter Image URL" 
-                      />
+                      {formData.desktop_image && formData.desktop_image.startsWith('data:image/') ? (
+                        <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 bg-white">
+                              <img src={formData.desktop_image} className="w-full h-full object-cover" alt="Desktop preview" />
+                            </div>
+                            <div>
+                              <span className="block text-xs font-bold text-gray-700">Custom Image Uploaded</span>
+                              <span className="block text-[10px] text-gray-400 font-mono">{(formData.desktop_image.length / 1024).toFixed(1)} KB • optimized</span>
+                            </div>
+                          </div>
+                          <button 
+                            type="button" 
+                            onClick={() => setFormData(prev => ({ ...prev, desktop_image: '' }))}
+                            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <input 
+                          type="text" 
+                          value={formData.desktop_image} 
+                          onChange={e => setFormData({...formData, desktop_image: e.target.value})} 
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" 
+                          placeholder="Enter Image URL" 
+                        />
+                      )}
                       <div className="relative border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#d4a54c] transition-colors bg-gray-50">
                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'desktop_image')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                         <UploadCloud className="w-6 h-6 text-gray-400 mx-auto mb-2" />
@@ -492,13 +521,34 @@ export default function BannerManagement() {
                       <Smartphone className="w-3.5 h-3.5" /> Mobile Background Image (Optional)
                     </label>
                     <div className="space-y-3">
-                      <input 
-                        type="text" 
-                        value={formData.mobile_image} 
-                        onChange={e => setFormData({...formData, mobile_image: e.target.value})} 
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" 
-                        placeholder="Enter Mobile Image URL" 
-                      />
+                      {formData.mobile_image && formData.mobile_image.startsWith('data:image/') ? (
+                        <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 bg-white">
+                              <img src={formData.mobile_image} className="w-full h-full object-cover" alt="Mobile preview" />
+                            </div>
+                            <div>
+                              <span className="block text-xs font-bold text-gray-700">Custom Mobile Image</span>
+                              <span className="block text-[10px] text-gray-400 font-mono">{(formData.mobile_image.length / 1024).toFixed(1)} KB • optimized</span>
+                            </div>
+                          </div>
+                          <button 
+                            type="button" 
+                            onClick={() => setFormData(prev => ({ ...prev, mobile_image: '' }))}
+                            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <input 
+                          type="text" 
+                          value={formData.mobile_image} 
+                          onChange={e => setFormData({...formData, mobile_image: e.target.value})} 
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" 
+                          placeholder="Enter Mobile Image URL" 
+                        />
+                      )}
                       <div className="relative border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#d4a54c] transition-colors bg-gray-50">
                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'mobile_image')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                         <p className="text-xs text-gray-500">Upload specific crop for mobile devices</p>
