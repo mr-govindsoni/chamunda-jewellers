@@ -20,6 +20,71 @@ const DEFAULT_BANNERS = [
     luxury_tag: "Luxury Campaign",
     display_order: 1,
     is_active: true
+  },
+  {
+    id: 2,
+    title: "The Art of Rings",
+    subtitle: "Elegance & Detail",
+    description: "Exquisite 22K gold rings featuring delicate Rajasthani Nakshi artwork and royal Rajputana motifs.",
+    desktop_image: "https://images.unsplash.com/photo-1605100804763-247f66126e28?q=80&w=2938&auto=format&fit=crop",
+    mobile_image: "https://images.unsplash.com/photo-1605100804763-247f66126e28?q=80&w=800&auto=format&fit=crop",
+    cta_text: "Explore Rings",
+    cta_url: "/collection/rings",
+    luxury_tag: "Elegance & Detail",
+    display_order: 2,
+    is_active: true
+  },
+  {
+    id: 3,
+    title: "Royal Bridal Couture",
+    subtitle: "Uncompromising Majesty",
+    description: "Immersive antique gold choker sets that preserve heritage royal values across generations.",
+    desktop_image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=2938&auto=format&fit=crop",
+    mobile_image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop",
+    cta_text: "Explore Bridal",
+    cta_url: "/collection",
+    luxury_tag: "Uncompromising Majesty",
+    display_order: 3,
+    is_active: true
+  },
+  {
+    id: 4,
+    title: "Heritage Rajputana",
+    subtitle: "Charwas Golden Legacy",
+    description: "Handcrafted heirloom masterpieces displaying traditional Kundan-Polki settings by master artisans.",
+    desktop_image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=2938&auto=format&fit=crop",
+    mobile_image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800&auto=format&fit=crop",
+    cta_text: "Heritage Legacy",
+    cta_url: "/collection",
+    luxury_tag: "Charwas Golden Legacy",
+    display_order: 4,
+    is_active: true
+  },
+  {
+    id: 5,
+    title: "Pure Gold & Bullion",
+    subtitle: "Sovereign Gold Coins",
+    description: "Secure absolute future purity with 24K BIS 999 certified gold coins and sovereign investment bars.",
+    desktop_image: "https://images.unsplash.com/photo-1610660600122-bd885de5eaaf?q=80&w=2938&auto=format&fit=crop",
+    mobile_image: "https://images.unsplash.com/photo-1610660600122-bd885de5eaaf?q=80&w=800&auto=format&fit=crop",
+    cta_text: "Explore Bullion",
+    cta_url: "/collection",
+    luxury_tag: "Sovereign Gold Coins",
+    display_order: 5,
+    is_active: true
+  },
+  {
+    id: 6,
+    title: "Bespoke Festive Couture",
+    subtitle: "Exclusive Season Offers",
+    description: "Cherish spectacular moments with customized services and flat 20% off on premium gold making charges.",
+    desktop_image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2938&auto=format&fit=crop",
+    mobile_image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop",
+    cta_text: "Festive Offer",
+    cta_url: "/collection",
+    luxury_tag: "Festive Offer",
+    display_order: 6,
+    is_active: true
   }
 ];
 

@@ -47,13 +47,26 @@ export default function AdminDashboard() {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         setProducts(data);
+        localStorage.setItem('chamunda_products', JSON.stringify(data));
       } else {
-        setProducts(PRODUCTS); // Fallback to context products
+        const local = localStorage.getItem('chamunda_products');
+        if (local) {
+          setProducts(JSON.parse(local));
+        } else {
+          setProducts(PRODUCTS);
+          localStorage.setItem('chamunda_products', JSON.stringify(PRODUCTS));
+        }
       }
     } catch (err) {
-      setProducts(PRODUCTS);
+      const local = localStorage.getItem('chamunda_products');
+      if (local) {
+        setProducts(JSON.parse(local));
+      } else {
+        setProducts(PRODUCTS);
+        localStorage.setItem('chamunda_products', JSON.stringify(PRODUCTS));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -128,20 +141,28 @@ export default function AdminDashboard() {
       if (editProduct) {
         const { error } = await supabase.from('products').update(payload).eq('id', editProduct.id);
         if (error) throw error;
-        // Local update fallback
-        setProducts(products.map(p => p.id === editProduct.id ? { ...p, ...payload } : p));
+        const updated = products.map(p => p.id === editProduct.id ? { ...p, ...payload } : p);
+        setProducts(updated);
+        localStorage.setItem('chamunda_products', JSON.stringify(updated));
       } else {
         const { data, error } = await supabase.from('products').insert([payload]).select();
         if (error) throw error;
-        if (data) setProducts([data[0], ...products]);
+        if (data) {
+          const updated = [data[0], ...products];
+          setProducts(updated);
+          localStorage.setItem('chamunda_products', JSON.stringify(updated));
+        }
       }
     } catch (err) {
       console.log('Using local state update (Supabase not connected)');
+      let updated = [];
       if (editProduct) {
-        setProducts(products.map(p => p.id === editProduct.id ? { ...p, ...payload } : p));
+        updated = products.map(p => p.id === editProduct.id ? { ...editProduct, ...payload } : p);
       } else {
-        setProducts([{ id: Date.now(), ...payload }, ...products]);
+        updated = [{ id: Date.now(), ...payload }, ...products];
       }
+      setProducts(updated);
+      localStorage.setItem('chamunda_products', JSON.stringify(updated));
     } finally {
       setIsLoading(false);
       setIsModalOpen(false);
@@ -152,9 +173,13 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this product?')) return;
     try {
       await supabase.from('products').delete().eq('id', id);
-      setProducts(products.filter(p => p.id !== id));
+      const updated = products.filter(p => p.id !== id);
+      setProducts(updated);
+      localStorage.setItem('chamunda_products', JSON.stringify(updated));
     } catch (err) {
-      setProducts(products.filter(p => p.id !== id));
+      const updated = products.filter(p => p.id !== id);
+      setProducts(updated);
+      localStorage.setItem('chamunda_products', JSON.stringify(updated));
     }
   };
 

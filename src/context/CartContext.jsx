@@ -27,9 +27,25 @@ export function CartProvider({ children }) {
       const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
       if (!error && data && data.length > 0) {
         setPRODUCTS(data);
+        localStorage.setItem('chamunda_products', JSON.stringify(data));
+      } else {
+        const local = localStorage.getItem('chamunda_products');
+        if (local) {
+          setPRODUCTS(JSON.parse(local));
+        } else {
+          setPRODUCTS(DEFAULT_PRODUCTS);
+          localStorage.setItem('chamunda_products', JSON.stringify(DEFAULT_PRODUCTS));
+        }
       }
     } catch (err) {
       console.error("Supabase not fully configured yet, using default products.", err);
+      const local = localStorage.getItem('chamunda_products');
+      if (local) {
+        setPRODUCTS(JSON.parse(local));
+      } else {
+        setPRODUCTS(DEFAULT_PRODUCTS);
+        localStorage.setItem('chamunda_products', JSON.stringify(DEFAULT_PRODUCTS));
+      }
     }
   };
 
