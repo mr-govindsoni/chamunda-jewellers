@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Image as ImageIcon, CheckCircle, X, ShieldCheck, LogOut, UploadCloud, LayoutDashboard, Layers, GripVertical, Smartphone, Monitor } from 'lucide-react';
+import { Plus, Edit2, Trash2, Image as ImageIcon, CheckCircle, X, ShieldCheck, LogOut, UploadCloud, LayoutDashboard, Layers, GripVertical, Smartphone, Monitor, Users } from 'lucide-react';
 import Link from 'next/link';
 
 // Default fallback banners if DB fails
@@ -184,7 +184,10 @@ export default function BannerManagement() {
                 <LayoutDashboard className="w-4 h-4" /> Products
               </Link>
               <Link href="/admin/banners" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-[#110722] bg-[#eebf63] transition-colors flex items-center gap-2">
-                <Layers className="w-4 h-4" /> Hero Banners
+                <Layers className="w-4 h-4" /> Banners
+              </Link>
+              <Link href="/admin/customers" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-2">
+                <Users className="w-4 h-4" /> Customers
               </Link>
             </nav>
           </div>
@@ -197,10 +200,10 @@ export default function BannerManagement() {
         </div>
       </header>
 
-      {/* Mobile Nav */}
-      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-2 flex gap-2 overflow-x-auto">
+      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-2 flex gap-2 overflow-x-auto sticky top-[72px] z-20">
         <Link href="/admin/dashboard" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-500 hover:bg-gray-50 whitespace-nowrap">Products</Link>
-        <Link href="/admin/banners" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-white bg-[#1f163b] whitespace-nowrap">Hero Banners</Link>
+        <Link href="/admin/banners" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-white bg-[#1f163b] whitespace-nowrap">Banners</Link>
+        <Link href="/admin/customers" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-500 hover:bg-gray-50 whitespace-nowrap">Customers</Link>
       </div>
 
       <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">

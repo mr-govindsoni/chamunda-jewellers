@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Image as ImageIcon, CheckCircle, X, Search, ShieldCheck, LogOut, UploadCloud } from 'lucide-react';
+import { Plus, Edit2, Trash2, Image as ImageIcon, CheckCircle, X, Search, ShieldCheck, LogOut, UploadCloud, LayoutDashboard, Layers, Users } from 'lucide-react';
+import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
 export default function AdminDashboard() {
@@ -167,12 +168,26 @@ export default function AdminDashboard() {
       {/* Admin Header */}
       <header className="bg-[#110722] text-white py-4 px-6 sticky top-0 z-30 shadow-md">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="w-6 h-6 text-[#eebf63]" />
-            <div>
-              <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Chamunda Admin</h1>
-              <p className="text-[10px] text-gray-400 tracking-wider">Luxury Jewellery Management</p>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="w-6 h-6 text-[#eebf63]" />
+              <div>
+                <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Chamunda Admin</h1>
+                <p className="text-[10px] text-gray-400 tracking-wider">Luxury Jewellery Management</p>
+              </div>
             </div>
+            
+            <nav className="hidden md:flex items-center gap-2 ml-8 border-l border-white/10 pl-8">
+              <Link href="/admin/dashboard" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-[#110722] bg-[#eebf63] transition-colors flex items-center gap-2">
+                <LayoutDashboard className="w-4 h-4" /> Products
+              </Link>
+              <Link href="/admin/banners" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-2">
+                <Layers className="w-4 h-4" /> Banners
+              </Link>
+              <Link href="/admin/customers" className="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-2">
+                <Users className="w-4 h-4" /> Customers
+              </Link>
+            </nav>
           </div>
           <button 
             onClick={handleLogout}

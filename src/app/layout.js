@@ -51,6 +51,7 @@ const jsonLd = {
 };
 
 import SmoothScrolling from '@/components/layout/SmoothScrolling';
+import { AuthProvider } from '@/context/AuthContext';
 
 export default function RootLayout({ children }) {
   return (
@@ -65,9 +66,11 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <SmoothScrolling>
-          <CartProvider>
-            {children}
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              {children}
+            </CartProvider>
+          </AuthProvider>
         </SmoothScrolling>
       </body>
     </html>

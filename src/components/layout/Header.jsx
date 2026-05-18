@@ -6,12 +6,16 @@ import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, M
 import { useCart } from '@/context/CartContext';
 import SearchOverlay from '@/components/ui/SearchOverlay';
 import CartDrawer from '@/components/ui/CartDrawer';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/context/AuthContext';
+import AuthModal from '@/components/auth/AuthModal';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
   const { setIsSearchOpen, setIsCartOpen, cartCount } = useCart();
+  const { user, setIsAuthModalOpen, logout } = useAuth();
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const { scrollY } = useScroll();
 
@@ -113,6 +117,26 @@ export default function Header() {
             >
               <Search className="w-5 h-5" />
             </button>
+            
+            <div className="relative">
+              {user ? (
+                <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="block p-1.5 active:scale-90 transition-transform">
+                  <div className="w-6 h-6 rounded-full bg-[#110722] text-[#eebf63] flex items-center justify-center font-serif text-[10px] uppercase shadow-sm">
+                    {user.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                  </div>
+                </Link>
+              ) : (
+                <button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="text-gray-700 hover:text-[#d4a54c] active:scale-90 transition-transform p-1.5"
+                >
+                  <User className="w-5 h-5" />
+                </button>
+              )}
+            </div>
             <button 
               onClick={() => setIsCartOpen(true)}
               className="text-gray-700 hover:text-[#d4a54c] active:scale-90 transition-transform relative p-1.5"
@@ -244,9 +268,50 @@ export default function Header() {
             >
               <Search className="w-5 h-5" />
             </button>
-            <button className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300 hidden sm:block">
-              <User className="w-5 h-5" />
-            </button>
+            <div className="relative hidden sm:block">
+              {user ? (
+                <div 
+                  className="relative group"
+                  onMouseEnter={() => setIsProfileDropdownOpen(true)}
+                  onMouseLeave={() => setIsProfileDropdownOpen(false)}
+                >
+                  <Link href="/account" className="flex items-center gap-2 text-gray-700 hover:text-[#d4a54c] transition-colors py-2">
+                    <div className="w-7 h-7 rounded-full bg-[#110722] text-[#eebf63] flex items-center justify-center font-serif text-sm uppercase shadow-sm">
+                      {user.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                    </div>
+                  </Link>
+
+                  <AnimatePresence>
+                    {isProfileDropdownOpen && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute right-0 top-full mt-0 w-48 bg-white border border-gray-100 shadow-xl rounded-xl overflow-hidden z-50"
+                      >
+                        <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
+                          <p className="text-sm font-medium text-gray-800 truncate">{user.full_name || 'Premium Member'}</p>
+                          <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                        </div>
+                        <div className="p-2 space-y-1">
+                          <Link href="/account" className="block px-3 py-2 text-sm text-gray-600 hover:text-[#d4a54c] hover:bg-gray-50 rounded-lg transition-colors">My Account</Link>
+                          <Link href="/account?tab=orders" className="block px-3 py-2 text-sm text-gray-600 hover:text-[#d4a54c] hover:bg-gray-50 rounded-lg transition-colors">Order History</Link>
+                          <Link href="/account?tab=wishlist" className="block px-3 py-2 text-sm text-gray-600 hover:text-[#d4a54c] hover:bg-gray-50 rounded-lg transition-colors">Wishlist</Link>
+                          <button onClick={logout} className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors">Sign Out</button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300 py-2"
+                >
+                  <User className="w-5 h-5" />
+                </button>
+              )}
+            </div>
             <button 
               onClick={() => setIsCartOpen(true)}
               className="text-gray-700 hover:text-[#d4a54c] hover:-translate-y-0.5 transition-all duration-300 relative group"
@@ -415,6 +480,7 @@ export default function Header() {
       </div>
       <SearchOverlay />
       <CartDrawer />
+      <AuthModal />
     </motion.header>
   );
 }

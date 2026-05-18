@@ -11,20 +11,26 @@ const realClient = supabaseUrl && supabaseAnonKey
 // Dummy client to prevent "Failed to fetch" errors when Supabase is not configured
 const dummyClient = {
   auth: {
-    signInWithPassword: async () => { throw new Error("Supabase not configured") },
+    signInWithPassword: async () => ({ data: null, error: new Error("Supabase not configured") }),
     getSession: async () => ({ data: { session: null } }),
-    signOut: async () => {}
+    signOut: async () => {},
+    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
   },
   from: () => ({
     select: () => ({
-      order: async () => { throw new Error("Supabase not configured") }
+      order: async () => ({ data: null, error: new Error("Supabase not configured") }),
+      single: async () => ({ data: null, error: new Error("Supabase not configured") }),
+      eq: () => ({
+        single: async () => ({ data: null, error: new Error("Supabase not configured") }),
+        order: async () => ({ data: null, error: new Error("Supabase not configured") })
+      })
     }),
-    insert: async () => { throw new Error("Supabase not configured") },
+    insert: async () => ({ data: null, error: new Error("Supabase not configured") }),
     update: () => ({
-      eq: async () => { throw new Error("Supabase not configured") }
+      eq: async () => ({ data: null, error: new Error("Supabase not configured") })
     }),
     delete: () => ({
-      eq: async () => { throw new Error("Supabase not configured") }
+      eq: async () => ({ data: null, error: new Error("Supabase not configured") })
     })
   })
 };
