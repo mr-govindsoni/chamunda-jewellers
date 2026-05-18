@@ -123,7 +123,7 @@ export default function AuthModal() {
                     <label className="block text-[10px] text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Email</label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                      <input type="email" required value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#d4a54c] transition-colors" placeholder="Enter your email" />
+                      <input type="email" required value={email} onChange={e => setEmail(e.target.value)} autoComplete="username" className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#d4a54c] transition-colors" placeholder="Enter your email" />
                     </div>
                   </div>
                   <div>
@@ -133,7 +133,7 @@ export default function AuthModal() {
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                      <input type="password" required value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#d4a54c] transition-colors" placeholder="Enter your password" />
+                      <input type="password" required value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#d4a54c] transition-colors" placeholder="Enter your password" />
                     </div>
                   </div>
                   

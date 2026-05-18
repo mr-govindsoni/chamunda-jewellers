@@ -80,6 +80,7 @@ export default function AdminLogin() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
                 className="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#eebf63]/50 transition-colors text-sm"
                 placeholder="admin@chamunda.com"
               />
@@ -95,6 +96,7 @@ export default function AdminLogin() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 className="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#eebf63]/50 transition-colors text-sm"
                 placeholder="••••••••"
               />
