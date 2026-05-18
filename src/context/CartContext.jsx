@@ -1,9 +1,10 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 
 const CartContext = createContext();
 
-const PRODUCTS = [
+const DEFAULT_PRODUCTS = [
   { id: 1, name: "22K Antique Gold Choker", code: "CJ-G101", category: "Gold Jewellery", collection: "Rajputana Royal Heritage", tags: ["choker", "necklace", "gold", "bridal", "churu", "rajasthan"], image: "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=600&auto=format&fit=crop" },
   { id: 2, name: "Diamond Solitaire Ring", code: "CJ-D202", category: "Diamond Jewellery", collection: "Solitaires", tags: ["ring", "diamond", "engagement", "solitaire", "rings"], image: "https://images.unsplash.com/photo-1605100804763-247f66126e28?q=80&w=600&auto=format&fit=crop" },
   { id: 3, name: "Temple Jewellery Set", code: "CJ-G103", category: "Gold Jewellery", collection: "Rajputana Royal Heritage", tags: ["temple", "set", "necklace", "ruby", "emerald"], image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop" },
@@ -16,8 +17,25 @@ const PRODUCTS = [
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
+  const [PRODUCTS, setPRODUCTS] = useState(DEFAULT_PRODUCTS);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Load products from Supabase with fallback to DEFAULT_PRODUCTS
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      if (!error && data && data.length > 0) {
+        setPRODUCTS(data);
+      }
+    } catch (err) {
+      console.error("Supabase not fully configured yet, using default products.", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   // Load cart from LocalStorage on mount
   useEffect(() => {
