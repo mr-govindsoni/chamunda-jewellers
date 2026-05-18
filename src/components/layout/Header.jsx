@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import LiveRatesTicker from './LiveRatesTicker';
+import LiveRates from '@/components/LiveRates';
 import { Menu, X, Search, ShoppingBag, User, ChevronDown, ChevronRight, Phone, MessageCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import SearchOverlay from '@/components/ui/SearchOverlay';
@@ -77,7 +77,7 @@ export default function Header() {
       transition={{ duration: 0.35, ease: "easeInOut" }}
       className="w-full sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-[0_2px_20px_-5px_rgba(0,0,0,0.1)] font-sans border-b border-[#eebf63]/30"
     >
-      <LiveRatesTicker />
+      <LiveRates variant="ticker" />
       
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Mobile Header: Perfect 3-column layout for mathematically centered logo */}

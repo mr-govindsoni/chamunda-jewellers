@@ -8,6 +8,7 @@ import TrendingProducts from '@/components/home/TrendingProducts';
 import StoreInfo from '@/components/home/StoreInfo';
 import TrustBadges from '@/components/home/TrustBadges';
 import CraftsmanshipStory from '@/components/home/CraftsmanshipStory';
+import LiveRates from '@/components/LiveRates';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import LoginPopup from '@/components/ui/LoginPopup';
@@ -33,6 +34,7 @@ export default function Home() {
       </section>
 
       <TrendingProducts />
+      <LiveRates variant="section" />
       <DigitalCatalog />
       <CraftsmanshipStory />
       <PromotionalBanners />
