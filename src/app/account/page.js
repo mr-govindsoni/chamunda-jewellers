@@ -44,8 +44,12 @@ function AccountContent() {
         {/* Header */}
         <div className="mb-10 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#1f163b] to-[#3a225e] text-[#eebf63] flex items-center justify-center font-serif text-3xl shadow-[0_10px_30px_rgba(31,22,59,0.2)] border-2 border-[#eebf63]/30">
-              {user.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+            <div className="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-[#1f163b] to-[#3a225e] text-[#eebf63] flex items-center justify-center font-serif text-3xl shadow-[0_10px_30px_rgba(31,22,59,0.2)] border-2 border-[#eebf63]/30">
+              {user.avatar_url || user.user_metadata?.avatar_url ? (
+                <img src={user.avatar_url || user.user_metadata?.avatar_url} alt={user.full_name} className="w-full h-full object-cover" />
+              ) : (
+                user.full_name?.charAt(0) || user.email?.charAt(0) || 'U'
+              )}
             </div>
             <div className="text-left">
               <div className="flex items-center gap-2 mb-1">

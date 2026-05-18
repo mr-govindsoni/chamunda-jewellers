@@ -121,6 +121,42 @@ export default function AdminDashboard() {
     });
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        setFormData(prev => ({ ...prev, images: [...prev.images, compressedDataUrl] }));
+        URL.revokeObjectURL(img.src);
+      };
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -141,7 +177,7 @@ export default function AdminDashboard() {
       if (editProduct) {
         const { error } = await supabase.from('products').update(payload).eq('id', editProduct.id);
         if (error) throw error;
-        const updated = products.map(p => p.id === editProduct.id ? { ...p, ...payload } : p);
+        const updated = products.map(p => String(p.id) === String(editProduct.id) ? { ...p, ...payload } : p);
         setProducts(updated);
         localStorage.setItem('chamunda_products', JSON.stringify(updated));
       } else {
@@ -157,7 +193,7 @@ export default function AdminDashboard() {
       console.log('Using local state update (Supabase not connected)');
       let updated = [];
       if (editProduct) {
-        updated = products.map(p => p.id === editProduct.id ? { ...editProduct, ...payload } : p);
+        updated = products.map(p => String(p.id) === String(editProduct.id) ? { ...p, ...payload } : p);
       } else {
         updated = [{ id: Date.now(), ...payload }, ...products];
       }
@@ -224,215 +260,220 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
-        {/* Controls */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search products..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#d4a54c] transition-colors shadow-sm"
-            />
-          </div>
-          <button 
-            onClick={() => handleOpenModal()}
-            className="w-full sm:w-auto px-6 py-2.5 bg-[#1f163b] hover:bg-[#d4a54c] text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors shadow-md flex items-center justify-center gap-2"
+        {!isModalOpen ? (
+          <>
+            {/* Controls */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+              <div className="relative w-full sm:w-96">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search products..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#d4a54c] transition-colors shadow-sm"
+                />
+              </div>
+              <button 
+                onClick={() => handleOpenModal()}
+                className="w-full sm:w-auto px-6 py-2.5 bg-[#1f163b] hover:bg-[#d4a54c] text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors shadow-md flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Add New Product
+              </button>
+            </div>
+
+            {/* Products Grid */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-100">
+                      <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Product</th>
+                      <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Category</th>
+                      <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Collection</th>
+                      <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                      <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {filteredProducts.map((product) => (
+                      <tr key={product.id} className="hover:bg-gray-50/50 transition-colors group">
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-lg bg-gray-50 overflow-hidden border border-gray-100 flex-shrink-0 flex items-center justify-center">
+                              {product.image ? (
+                                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <ImageIcon className="w-6 h-6 text-gray-300" />
+                              )}
+                            </div>
+                            <div>
+                              <div className="font-serif text-sm text-[#1f163b] font-medium">{product.name}</div>
+                              {product.tags && product.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {product.tags.map((tag, idx) => (
+                                    <span key={idx} className="px-1.5 py-0.2 bg-gray-100 text-gray-500 rounded text-[9px] uppercase tracking-wider">{tag}</span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 text-sm text-gray-500 font-medium">
+                          {product.category}
+                        </td>
+                        <td className="py-4 px-6 text-sm text-gray-400 font-medium">
+                          {product.collection || 'General Collection'}
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="flex flex-col gap-0.5">
+                            {product.availability ? (
+                              <span className="inline-block px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded text-[9px] uppercase tracking-wider font-bold w-max">Available</span>
+                            ) : (
+                              <span className="inline-block px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded text-[9px] uppercase tracking-wider font-bold w-max">Out of Stock</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 text-right">
+                          <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => handleOpenModal(product)} className="p-2 text-gray-400 hover:text-[#d4a54c] hover:bg-[#d4a54c]/10 rounded-lg transition-colors">
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleDelete(product.id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {filteredProducts.length === 0 && (
+                      <tr>
+                        <td colSpan="5" className="py-12 text-center text-gray-400 text-sm">
+                          No products found.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        ) : (
+          <form 
+            onSubmit={handleSubmit}
+            className="w-full bg-white rounded-2xl border border-gray-200 shadow-xl flex flex-col overflow-hidden"
           >
-            <Plus className="w-4 h-4" /> Add New Product
-          </button>
-        </div>
-
-        {/* Products Grid */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Product</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Category</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Collection</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50/50 transition-colors group">
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
-                          {product.image || (product.images && product.images[0]) ? (
-                            <img src={product.image || product.images[0]} alt="" className="w-full h-full object-cover" />
-                          ) : (
-                            <ImageIcon className="w-5 h-5 m-auto mt-3 text-gray-300" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-serif text-[#1f163b] text-sm font-medium">{product.name || product.title}</p>
-                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{product.code || `ID: ${product.id}`}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-6 text-xs text-gray-600 font-medium">{product.category}</td>
-                    <td className="py-4 px-6 text-xs text-gray-600 font-medium">{product.collection || '-'}</td>
-                    <td className="py-4 px-6">
-                      <div className="flex flex-col gap-1">
-                        {product.featured && <span className="inline-block px-2 py-0.5 bg-[#eebf63]/10 text-[#d4a54c] border border-[#eebf63]/30 rounded text-[9px] uppercase tracking-wider font-bold w-max">Featured</span>}
-                        {product.availability !== false ? (
-                          <span className="inline-block px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded text-[9px] uppercase tracking-wider font-bold w-max">Available</span>
-                        ) : (
-                          <span className="inline-block px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded text-[9px] uppercase tracking-wider font-bold w-max">Out of Stock</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-4 px-6 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleOpenModal(product)} className="p-2 text-gray-400 hover:text-[#d4a54c] hover:bg-[#d4a54c]/10 rounded-lg transition-colors">
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => handleDelete(product.id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {filteredProducts.length === 0 && (
-                  <tr>
-                    <td colSpan="5" className="py-12 text-center text-gray-400 text-sm">
-                      No products found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </main>
-
-      {/* Add/Edit Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
-              className="absolute inset-0 bg-[#110722]/60 backdrop-blur-sm"
-              onClick={() => setIsModalOpen(false)}
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100"
-            >
-              <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
+              <div>
                 <h2 className="font-serif text-xl text-[#1f163b]">{editProduct ? 'Edit Product' : 'Add New Product'}</h2>
-                <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                  <X className="w-5 h-5" />
-                </button>
+                <p className="text-xs text-gray-500 mt-0.5">Fill in product details and add high quality images.</p>
+              </div>
+              <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:text-white hover:bg-red-500 rounded-lg text-xs font-bold uppercase tracking-widest transition-all border border-gray-200 flex items-center gap-2 bg-white">
+                <X className="w-4 h-4" /> Back to Products
+              </button>
+            </div>
+
+            <div className="p-6 md:p-8 space-y-8">
+              
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Product Title</label>
+                  <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Category</label>
+                  <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]">
+                    <option>Gold Jewellery</option>
+                    <option>Diamond Jewellery</option>
+                    <option>Silver Articles</option>
+                    <option>Bullion</option>
+                    <option>Bridal Collection</option>
+                  </select>
+                </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6">
-                <form id="product-form" onSubmit={handleSubmit} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Collection</label>
+                  <input type="text" value={formData.collection} onChange={e => setFormData({...formData, collection: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" placeholder="e.g. Rajputana Royal Heritage" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Search Tags (comma separated)</label>
+                  <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" placeholder="gold, necklace, bridal" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Description</label>
+                <textarea rows="3" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c] resize-none"></textarea>
+              </div>
+
+              {/* Images */}
+              <div>
+                <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Product Images</label>
+                <div className="flex flex-col sm:flex-row gap-4 mb-3">
+                  <div className="flex-grow flex gap-2">
+                    <input 
+                      type="url" 
+                      value={imageInput} 
+                      onChange={e => setImageInput(e.target.value)} 
+                      className="flex-1 bg-white border border-gray-200 rounded-xl py-2 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" 
+                      placeholder="Paste image URL (https://...)" 
+                    />
+                    <button type="button" onClick={handleAddImage} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2">
+                      Add URL
+                    </button>
+                  </div>
                   
-                  {/* Basic Info */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Product Title</label>
-                      <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Category</label>
-                      <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]">
-                        <option>Gold Jewellery</option>
-                        <option>Diamond Jewellery</option>
-                        <option>Silver Articles</option>
-                        <option>Bullion</option>
-                        <option>Bridal Collection</option>
-                      </select>
-                    </div>
+                  <div className="relative border-2 border-dashed border-gray-200 rounded-xl p-2 text-center hover:border-[#d4a54c] transition-colors bg-gray-50 flex items-center justify-center gap-2 min-w-[200px]">
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    <UploadCloud className="w-4 h-4 text-gray-400" />
+                    <span className="text-xs text-gray-500 font-medium">Or Upload Photo</span>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Collection</label>
-                      <input type="text" value={formData.collection} onChange={e => setFormData({...formData, collection: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" placeholder="e.g. Rajputana Royal Heritage" />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Search Tags (comma separated)</label>
-                      <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" placeholder="gold, necklace, bridal" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Description</label>
-                    <textarea rows="3" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:border-[#d4a54c] resize-none"></textarea>
-                  </div>
-
-                  {/* Images */}
-                  <div>
-                    <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Product Images</label>
-                    <div className="flex gap-2 mb-3">
-                      <input 
-                        type="url" 
-                        value={imageInput} 
-                        onChange={e => setImageInput(e.target.value)} 
-                        className="flex-1 bg-white border border-gray-200 rounded-xl py-2 px-4 text-sm focus:outline-none focus:border-[#d4a54c]" 
-                        placeholder="Paste image URL (https://...)" 
-                      />
-                      <button type="button" onClick={handleAddImage} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2">
-                        <UploadCloud className="w-4 h-4" /> Add
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                  {formData.images.map((img, i) => (
+                    <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <button type="button" onClick={() => handleRemoveImage(i)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                        <X className="w-3 h-3" />
                       </button>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                      {formData.images.map((img, i) => (
-                        <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
-                          <img src={img} alt="" className="w-full h-full object-cover" />
-                          <button type="button" onClick={() => handleRemoveImage(i)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ))}
-                      {formData.images.length === 0 && (
-                        <div className="col-span-full py-6 text-center border-2 border-dashed border-gray-200 rounded-xl text-xs text-gray-400">
-                          No images added yet. Add URLs above.
-                        </div>
-                      )}
+                  ))}
+                  {formData.images.length === 0 && (
+                    <div className="col-span-full py-6 text-center border-2 border-dashed border-gray-200 rounded-xl text-xs text-gray-400">
+                      No images added yet. Add URLs above.
                     </div>
-                  </div>
-
-                  {/* Toggles */}
-                  <div className="flex items-center gap-8 py-4 border-t border-gray-100">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={formData.featured} onChange={e => setFormData({...formData, featured: e.target.checked})} className="w-4 h-4 text-[#d4a54c] border-gray-300 rounded focus:ring-[#d4a54c]" />
-                      <span className="text-sm text-gray-700 font-medium">Featured Product</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={formData.availability} onChange={e => setFormData({...formData, availability: e.target.checked})} className="w-4 h-4 text-[#d4a54c] border-gray-300 rounded focus:ring-[#d4a54c]" />
-                      <span className="text-sm text-gray-700 font-medium">In Stock</span>
-                    </label>
-                  </div>
-
-                </form>
+                  )}
+                </div>
               </div>
 
-              <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-2.5 text-gray-500 hover:text-gray-700 font-bold text-xs uppercase tracking-widest transition-colors">
-                  Cancel
-                </button>
-                <button type="submit" form="product-form" disabled={isLoading} className="px-8 py-2.5 bg-[#1f163b] hover:bg-[#d4a54c] text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors shadow-md disabled:opacity-50 flex items-center gap-2">
-                  {isLoading ? 'Saving...' : (editProduct ? 'Update Product' : 'Save Product')}
-                </button>
+              {/* Toggles */}
+              <div className="flex items-center gap-8 py-4 border-t border-gray-100">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={formData.featured} onChange={e => setFormData({...formData, featured: e.target.checked})} className="w-4 h-4 text-[#d4a54c] border-gray-300 rounded focus:ring-[#d4a54c]" />
+                  <span className="text-sm text-gray-700 font-medium">Featured Product</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={formData.availability} onChange={e => setFormData({...formData, availability: e.target.checked})} className="w-4 h-4 text-[#d4a54c] border-gray-300 rounded focus:ring-[#d4a54c]" />
+                  <span className="text-sm text-gray-700 font-medium">In Stock</span>
+                </label>
               </div>
 
-            </motion.div>
-          </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3">
+              <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-2.5 text-gray-500 hover:text-gray-700 font-bold text-xs uppercase tracking-widest transition-colors">
+                Cancel
+              </button>
+              <button type="submit" disabled={isLoading} className="px-8 py-2.5 bg-[#1f163b] hover:bg-[#d4a54c] text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors shadow-md disabled:opacity-50 flex items-center gap-2">
+                {isLoading ? 'Saving...' : (editProduct ? 'Update Product' : 'Save Product')}
+              </button>
+            </div>
+          </form>
         )}
-      </AnimatePresence>
+      </main>
     </div>
   );
 }

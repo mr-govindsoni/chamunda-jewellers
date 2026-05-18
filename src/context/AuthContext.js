@@ -106,6 +106,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = async (customUser = null) => {
+    try {
+      if (customUser) {
+        // Direct custom/simulated Google login
+        sessionStorage.setItem('customerAuth', JSON.stringify(customUser));
+        setUser(customUser);
+        try {
+          await fetch('/api/whatsapp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'login', name: customUser.full_name, email: customUser.email })
+          });
+        } catch (e) {}
+        return { data: { user: customUser }, error: null };
+      }
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) throw error;
+      return { data, error: null };
+    } catch (error) {
+      console.log('Falling back to custom Google Sign-in selector');
+      return { error };
+    }
+  };
+
   const signup = async (email, password, fullName) => {
     try {
       const { data, error } = await supabase.auth.signUp({ 
@@ -137,6 +167,7 @@ export const AuthProvider = ({ children }) => {
       login,
       signup,
       logout,
+      loginWithGoogle,
       isAuthModalOpen,
       setIsAuthModalOpen
     }}>

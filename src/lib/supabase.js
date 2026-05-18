@@ -16,23 +16,19 @@ const dummyClient = {
     signOut: async () => {},
     onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
   },
-  from: () => ({
-    select: () => ({
-      order: async () => ({ data: null, error: new Error("Supabase not configured") }),
-      single: async () => ({ data: null, error: new Error("Supabase not configured") }),
-      eq: () => ({
-        single: async () => ({ data: null, error: new Error("Supabase not configured") }),
-        order: async () => ({ data: null, error: new Error("Supabase not configured") })
-      })
-    }),
-    insert: async () => ({ data: null, error: new Error("Supabase not configured") }),
-    update: () => ({
-      eq: async () => ({ data: null, error: new Error("Supabase not configured") })
-    }),
-    delete: () => ({
-      eq: async () => ({ data: null, error: new Error("Supabase not configured") })
-    })
-  })
+  from: () => {
+    const chain = {
+      select: () => chain,
+      insert: () => chain,
+      update: () => chain,
+      delete: () => chain,
+      eq: () => chain,
+      order: () => chain,
+      single: () => chain,
+      then: (onfulfilled) => Promise.resolve({ data: null, error: new Error("Supabase not configured") }).then(onfulfilled)
+    };
+    return chain;
+  }
 };
 
 export const supabase = realClient || dummyClient;
