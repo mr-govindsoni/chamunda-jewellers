@@ -62,11 +62,24 @@ export default function BannerManagement() {
       const { data, error } = await supabase.from('hero_banners').select('*').order('display_order', { ascending: true });
       if (!error && data && data.length > 0) {
         setBanners(data);
+        localStorage.setItem('chamunda_banners', JSON.stringify(data));
       } else {
-        setBanners(DEFAULT_BANNERS);
+        const local = localStorage.getItem('chamunda_banners');
+        if (local) {
+          setBanners(JSON.parse(local));
+        } else {
+          setBanners(DEFAULT_BANNERS);
+          localStorage.setItem('chamunda_banners', JSON.stringify(DEFAULT_BANNERS));
+        }
       }
     } catch (err) {
-      setBanners(DEFAULT_BANNERS);
+      const local = localStorage.getItem('chamunda_banners');
+      if (local) {
+        setBanners(JSON.parse(local));
+      } else {
+        setBanners(DEFAULT_BANNERS);
+        localStorage.setItem('chamunda_banners', JSON.stringify(DEFAULT_BANNERS));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -121,21 +134,28 @@ export default function BannerManagement() {
       if (editBanner) {
         const { error } = await supabase.from('hero_banners').update(payload).eq('id', editBanner.id);
         if (error) throw error;
-        setBanners(banners.map(b => b.id === editBanner.id ? { ...b, ...payload } : b).sort((a,b) => a.display_order - b.display_order));
+        const updated = banners.map(b => b.id === editBanner.id ? { ...b, ...payload } : b).sort((a,b) => a.display_order - b.display_order);
+        setBanners(updated);
+        localStorage.setItem('chamunda_banners', JSON.stringify(updated));
       } else {
         const { data, error } = await supabase.from('hero_banners').insert([payload]).select();
         if (error) throw error;
         if (data) {
-          setBanners([...banners, data[0]].sort((a,b) => a.display_order - b.display_order));
+          const updated = [...banners, data[0]].sort((a,b) => a.display_order - b.display_order);
+          setBanners(updated);
+          localStorage.setItem('chamunda_banners', JSON.stringify(updated));
         }
       }
     } catch (err) {
       console.log('Using local state update (Supabase not connected)');
+      let updated = [];
       if (editBanner) {
-        setBanners(banners.map(b => b.id === editBanner.id ? { ...editBanner, ...payload } : b).sort((a,b) => a.display_order - b.display_order));
+        updated = banners.map(b => b.id === editBanner.id ? { ...editBanner, ...payload } : b).sort((a,b) => a.display_order - b.display_order);
       } else {
-        setBanners([...banners, { id: Date.now(), ...payload }].sort((a,b) => a.display_order - b.display_order));
+        updated = [...banners, { id: Date.now(), ...payload }].sort((a,b) => a.display_order - b.display_order);
       }
+      setBanners(updated);
+      localStorage.setItem('chamunda_banners', JSON.stringify(updated));
     } finally {
       setIsLoading(false);
       setIsModalOpen(false);
@@ -146,9 +166,13 @@ export default function BannerManagement() {
     if (!confirm('Are you sure you want to delete this banner?')) return;
     try {
       await supabase.from('hero_banners').delete().eq('id', id);
-      setBanners(banners.filter(b => b.id !== id));
+      const updated = banners.filter(b => b.id !== id);
+      setBanners(updated);
+      localStorage.setItem('chamunda_banners', JSON.stringify(updated));
     } catch (err) {
-      setBanners(banners.filter(b => b.id !== id));
+      const updated = banners.filter(b => b.id !== id);
+      setBanners(updated);
+      localStorage.setItem('chamunda_banners', JSON.stringify(updated));
     }
   };
 

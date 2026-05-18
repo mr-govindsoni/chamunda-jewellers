@@ -77,10 +77,50 @@ export default function HeroSection() {
           }));
           setActiveSlides(formattedSlides);
         } else {
-          setActiveSlides(defaultSlides);
+          const local = localStorage.getItem('chamunda_banners');
+          if (local) {
+            const parsed = JSON.parse(local).filter(b => b.is_active !== false);
+            if (parsed.length > 0) {
+              setActiveSlides(parsed.map(b => ({
+                type: 'image',
+                src: b.desktop_image,
+                mobileSrc: b.mobile_image || b.desktop_image,
+                title: b.title,
+                subtitle: b.subtitle,
+                desc: b.description,
+                cta_text: b.cta_text,
+                cta_url: b.cta_url,
+                luxury_tag: b.luxury_tag || "Luxury Campaign"
+              })));
+            } else {
+              setActiveSlides(defaultSlides);
+            }
+          } else {
+            setActiveSlides(defaultSlides);
+          }
         }
       } catch (err) {
-        setActiveSlides(defaultSlides);
+        const local = localStorage.getItem('chamunda_banners');
+        if (local) {
+          const parsed = JSON.parse(local).filter(b => b.is_active !== false);
+          if (parsed.length > 0) {
+            setActiveSlides(parsed.map(b => ({
+              type: 'image',
+              src: b.desktop_image,
+              mobileSrc: b.mobile_image || b.desktop_image,
+              title: b.title,
+              subtitle: b.subtitle,
+              desc: b.description,
+              cta_text: b.cta_text,
+              cta_url: b.cta_url,
+              luxury_tag: b.luxury_tag || "Luxury Campaign"
+            })));
+          } else {
+            setActiveSlides(defaultSlides);
+          }
+        } else {
+          setActiveSlides(defaultSlides);
+        }
       } finally {
         setIsLoading(false);
       }
