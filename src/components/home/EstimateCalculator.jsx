@@ -42,50 +42,51 @@ export default function EstimateCalculator() {
   const [unit, setUnit] = useState('grams'); // grams, kg, oz
   const [makingCharge, setMakingCharge] = useState(800);
 
+  const fetchRates = async () => {
+    setLoading(true);
+    try {
+      const [goldRes, silverRes, forexRes] = await Promise.all([
+        fetch('https://api.gold-api.com/price/XAU'),
+        fetch('https://api.gold-api.com/price/XAG'),
+        fetch('https://api.exchangerate-api.com/v4/latest/USD').catch(() => null)
+      ]);
+
+      const goldData = await goldRes.json();
+      const silverData = await silverRes.json();
+      
+      let usdinr = 83.50;
+      if (forexRes && forexRes.ok) {
+        const forexData = await forexRes.json();
+        if (forexData?.rates?.INR) {
+          usdinr = forexData.rates.INR;
+        }
+      }
+
+      const calculatePerGram = (rawPrice) => {
+        let inrPrice = (rawPrice * usdinr) / 31.103;
+        return inrPrice * 1.16; // Retail premium
+      };
+
+      const gold24kPerGram = calculatePerGram(goldData.price);
+      const gold22kPerGram = gold24kPerGram * 0.916;
+      const silverPerGram = calculatePerGram(silverData.price);
+
+      setRates({
+        gold24k: gold24kPerGram,
+        gold22k: gold22kPerGram,
+        silver: silverPerGram,
+        trend: goldData.ch >= 0 ? `▲ +${(calculatePerGram(goldData.ch) * 10).toFixed(2)}` : `▼ ${(calculatePerGram(goldData.ch) * 10).toFixed(2)}`,
+        isPositive: goldData.ch >= 0
+      });
+    } catch (err) {
+      console.error("Failed to load rates");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
-    async function fetchRates() {
-      try {
-        const [goldRes, silverRes, forexRes] = await Promise.all([
-          fetch('https://api.gold-api.com/price/XAU'),
-          fetch('https://api.gold-api.com/price/XAG'),
-          fetch('https://api.exchangerate-api.com/v4/latest/USD').catch(() => null)
-        ]);
-
-        const goldData = await goldRes.json();
-        const silverData = await silverRes.json();
-        
-        let usdinr = 83.50;
-        if (forexRes && forexRes.ok) {
-          const forexData = await forexRes.json();
-          if (forexData?.rates?.INR) {
-            usdinr = forexData.rates.INR;
-          }
-        }
-
-        const calculatePerGram = (rawPrice) => {
-          let inrPrice = (rawPrice * usdinr) / 31.103;
-          return inrPrice * 1.16; // Retail premium
-        };
-
-        const gold24kPerGram = calculatePerGram(goldData.price);
-        const gold22kPerGram = gold24kPerGram * 0.916;
-        const silverPerGram = calculatePerGram(silverData.price);
-
-        setRates({
-          gold24k: gold24kPerGram,
-          gold22k: gold22kPerGram,
-          silver: silverPerGram,
-          trend: goldData.ch >= 0 ? `▲ +${(calculatePerGram(goldData.ch) * 10).toFixed(2)}` : `▼ ${(calculatePerGram(goldData.ch) * 10).toFixed(2)}`,
-          isPositive: goldData.ch >= 0
-        });
-      } catch (err) {
-        console.error("Failed to load rates");
-      } finally {
-        setLoading(false);
-      }
-    }
-    
     fetchRates();
     const interval = setInterval(fetchRates, 60000);
     return () => clearInterval(interval);
@@ -206,10 +207,14 @@ export default function EstimateCalculator() {
             </span>
             {mounted && rates && <span className={`text-[10px] font-bold tracking-widest flex items-center px-2 py-1 rounded border ${rates.isPositive ? 'text-green-400 bg-green-400/10 border-green-400/20' : 'text-red-400 bg-red-400/10 border-red-400/20'}`}>{rates.trend || '▲ +8.00'}</span>}
           </div>
-          <div className="flex items-center gap-2 text-[10px] text-gray-500 mt-3 sm:mt-0 w-full sm:w-auto justify-end uppercase tracking-widest font-medium relative z-10">
+          <button 
+            onClick={fetchRates}
+            disabled={loading}
+            className="flex items-center gap-2 text-[10px] text-gray-500 mt-3 sm:mt-0 w-full sm:w-auto justify-end uppercase tracking-widest font-medium relative z-10 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <span>Live Sync</span>
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#eebf63]' : 'text-gray-400'}`} />
-          </div>
+          </button>
         </div>
 
         {/* Breakdown */}
