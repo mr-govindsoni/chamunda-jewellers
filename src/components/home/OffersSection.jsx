@@ -40,6 +40,14 @@ export default function OffersSection() {
     return () => clearInterval(timer);
   }, [offers.length]);
 
+  const handleClaimOffer = () => {
+    const offer = offers[currentOffer];
+    const message = `Hello Chamunda Jewellers, I would like to claim this exclusive offer:\n\n*${offer.title}*\n${offer.subtitle}\n_${offer.validity}_`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/916367246095?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, x: 40 }}
@@ -101,7 +109,10 @@ export default function OffersSection() {
             ))}
           </div>
 
-          <button className="w-full bg-white/5 backdrop-blur-md border border-[#eebf63]/30 text-[#eebf63] py-4 rounded-xl font-bold text-[13px] tracking-widest uppercase hover:bg-[#eebf63] hover:text-[#1f163b] transition-all duration-300 flex justify-center items-center gap-2 group">
+          <button 
+            onClick={handleClaimOffer}
+            className="w-full bg-white/5 backdrop-blur-md border border-[#eebf63]/30 text-[#eebf63] py-4 rounded-xl font-bold text-[13px] tracking-widest uppercase hover:bg-[#eebf63] hover:text-[#1f163b] transition-all duration-300 flex justify-center items-center gap-2 group"
+          >
             CLAIM OFFER NOW
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
