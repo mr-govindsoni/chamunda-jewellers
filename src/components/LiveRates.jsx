@@ -5,6 +5,7 @@ import { TrendingUp, TrendingDown, Clock, Sparkles } from 'lucide-react';
 
 export default function LiveRates({ variant = 'ticker' }) {
   const [rates, setRates] = useState({ gold: null, silver: null });
+  const [exchangeRate, setExchangeRate] = useState(83.50); // Fallback USD to INR
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [lastUpdated, setLastUpdated] = useState('');
@@ -13,9 +14,10 @@ export default function LiveRates({ variant = 'ticker' }) {
     try {
       setError(false);
       
-      const [goldRes, silverRes] = await Promise.all([
+      const [goldRes, silverRes, forexRes] = await Promise.all([
         fetch('https://api.gold-api.com/price/XAU'),
-        fetch('https://api.gold-api.com/price/XAG')
+        fetch('https://api.gold-api.com/price/XAG'),
+        fetch('https://api.exchangerate-api.com/v4/latest/USD').catch(() => null)
       ]);
 
       if (!goldRes.ok || !silverRes.ok) {
@@ -24,6 +26,15 @@ export default function LiveRates({ variant = 'ticker' }) {
 
       const goldData = await goldRes.json();
       const silverData = await silverRes.json();
+      
+      let usdinr = 83.50; // default
+      if (forexRes && forexRes.ok) {
+        const forexData = await forexRes.json();
+        if (forexData?.rates?.INR) {
+          usdinr = forexData.rates.INR;
+        }
+      }
+      setExchangeRate(usdinr);
 
       setRates({
         gold: goldData,
@@ -47,10 +58,18 @@ export default function LiveRates({ variant = 'ticker' }) {
     return () => clearInterval(interval);
   }, []);
 
+  const convertPrice = (price, metal) => {
+    if (metal === 'GOLD') {
+      return ((price * exchangeRate) / 31.103) * 10;
+    } else {
+      return ((price * exchangeRate) / 31.103) * 1000;
+    }
+  };
+
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(price);
@@ -59,22 +78,30 @@ export default function LiveRates({ variant = 'ticker' }) {
   const RateDisplay = ({ metal, data }) => {
     if (!data) return null;
     
-    const isPositive = data.ch >= 0;
+    const convertedPrice = convertPrice(data.price, metal);
+    const convertedHigh = convertPrice(data.high_price, metal);
+    const convertedLow = convertPrice(data.low_price, metal);
+    const convertedCh = convertPrice(data.ch, metal);
+
+    const isPositive = convertedCh >= 0;
     const Icon = isPositive ? TrendingUp : TrendingDown;
     const colorClass = isPositive ? 'text-green-400' : 'text-red-400';
     const bgClass = isPositive ? 'bg-green-400/10' : 'bg-red-400/10';
+
+    const displayName = metal === 'GOLD' ? 'GOLD 24K' : 'SILVER 999';
+    const displayUnit = metal === 'GOLD' ? 'per 10g' : 'per 1kg';
 
     if (variant === 'ticker') {
       return (
         <div className="flex items-center gap-3 px-8 border-r border-white/10 shrink-0 group hover:bg-white/5 transition-colors duration-300 h-full">
           <span className="font-serif text-[11px] tracking-[0.2em] uppercase text-gray-300 group-hover:text-white transition-colors">
-            COMEX {metal}
+            {displayName} <span className="text-[9px] text-gray-500 ml-1">{displayUnit}</span>
           </span>
           <span className="font-bold text-[#eebf63] tracking-widest text-sm drop-shadow-[0_0_8px_rgba(238,191,99,0.5)]">
-            {formatPrice(data.price)}
+            {formatPrice(convertedPrice)}
           </span>
           <div className={`flex items-center gap-1 ${colorClass} ${bgClass} px-2 py-0.5 rounded text-[10px] font-bold tracking-wider`}>
-            {isPositive ? '▲' : '▼'} {isPositive ? '+' : ''}{data.ch.toFixed(2)}
+            {isPositive ? '▲' : '▼'} {isPositive ? '+' : ''}{convertedCh.toFixed(2)}
           </div>
         </div>
       );
@@ -91,8 +118,9 @@ export default function LiveRates({ variant = 'ticker' }) {
         
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div>
-            <h3 className="text-gray-400 text-xs font-bold uppercase tracking-[0.2em] mb-1">COMEX LIVE</h3>
-            <h2 className="text-3xl font-serif text-white tracking-widest">{metal}</h2>
+            <h3 className="text-gray-400 text-xs font-bold uppercase tracking-[0.2em] mb-1">LIVE MARKET</h3>
+            <h2 className="text-3xl font-serif text-white tracking-widest">{displayName}</h2>
+            <p className="text-[#eebf63]/70 text-[10px] uppercase tracking-widest mt-1">{displayUnit}</p>
           </div>
           <div className={`w-12 h-12 rounded-full flex items-center justify-center ${bgClass} ${colorClass} group-hover:scale-110 transition-transform duration-500`}>
             <Icon className="w-6 h-6" />
@@ -102,21 +130,21 @@ export default function LiveRates({ variant = 'ticker' }) {
         <div className="space-y-4 relative z-10">
           <div className="flex items-end gap-4">
             <span className="text-4xl sm:text-5xl font-light text-[#eebf63] tracking-wider drop-shadow-[0_0_15px_rgba(238,191,99,0.2)]">
-              {formatPrice(data.price)}
+              {formatPrice(convertedPrice)}
             </span>
             <div className={`flex items-center gap-1 ${colorClass} mb-2 text-sm font-bold`}>
-              {isPositive ? '▲' : '▼'} {isPositive ? '+' : ''}{data.ch.toFixed(2)}
+              {isPositive ? '▲' : '▼'} {isPositive ? '+' : ''}{convertedCh.toFixed(2)}
             </div>
           </div>
           
           <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10 text-xs text-gray-400">
             <div>
               <span className="block text-[9px] uppercase tracking-widest mb-1">High</span>
-              <span className="text-white">{formatPrice(data.high_price)}</span>
+              <span className="text-white">{formatPrice(convertedHigh)}</span>
             </div>
             <div>
               <span className="block text-[9px] uppercase tracking-widest mb-1">Low</span>
-              <span className="text-white">{formatPrice(data.low_price)}</span>
+              <span className="text-white">{formatPrice(convertedLow)}</span>
             </div>
           </div>
         </div>
