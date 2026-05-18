@@ -60,7 +60,7 @@ export default function LiveRates({ variant = 'ticker' }) {
   const calculateRates = (rawPrice, metal, type) => {
     if (type === 'COMEX') return rawPrice;
     
-    // MCX Conversion (Base INR without retail premium)
+    // Base INR conversion
     let inrPrice = 0;
     if (metal === 'GOLD') {
       inrPrice = ((rawPrice * exchangeRate) / 31.103) * 10;
@@ -68,11 +68,17 @@ export default function LiveRates({ variant = 'ticker' }) {
       inrPrice = ((rawPrice * exchangeRate) / 31.103) * 1000;
     }
 
-    if (type === 'MCX') return inrPrice;
+    // Apply accurate Indian market premiums (Import Duty + Custom Taxes + Logistics)
+    // MCX generally carries ~13% premium for Gold, ~16% for Silver over COMEX
+    if (type === 'MCX') {
+      if (metal === 'GOLD') return inrPrice * 1.13;
+      if (metal === 'SILVER') return inrPrice * 1.16;
+    }
 
-    // Retail Premium added (3% for gold, 2% for silver)
-    if (metal === 'GOLD') return inrPrice * 1.03;
-    if (metal === 'SILVER') return inrPrice * 1.02;
+    // Retail Premium added (Additional 3% GST + Retailer Margin over MCX)
+    // Total Retail Premium is ~16% for Gold, ~16% for Silver
+    if (metal === 'GOLD') return inrPrice * 1.16;
+    if (metal === 'SILVER') return inrPrice * 1.16;
 
     return 0;
   };
