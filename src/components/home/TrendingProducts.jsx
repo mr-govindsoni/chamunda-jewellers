@@ -3,11 +3,16 @@ import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ChevronLeft, ChevronRight, Heart, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
 
 export default function TrendingProducts() {
   const scrollRef = useRef(null);
+  const { PRODUCTS } = useCart();
   
-  const products = [
+  // Filter products by featured status
+  const featured = PRODUCTS.filter(p => p.featured === true);
+  
+  const defaultProducts = [
     {
       id: 1,
       name: "Rajwada Kundan Choker",
@@ -49,6 +54,20 @@ export default function TrendingProducts() {
       badge: "Must Have"
     }
   ];
+
+  // Map database featured products to component schema
+  const displayProducts = featured.length > 0 ? featured.map(p => {
+    const badges = ["Best Seller", "New Arrival", "Trending", "Must Have"];
+    const badge = Array.isArray(p.tags) ? p.tags.find(t => badges.includes(t)) : null;
+    return {
+      id: p.id,
+      name: p.name || p.title,
+      category: p.category,
+      price: p.price || "On Request",
+      image: p.image || (p.images && p.images[0]) || "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=600&auto=format",
+      badge: badge || null
+    };
+  }) : defaultProducts;
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -115,7 +134,7 @@ export default function TrendingProducts() {
             className="flex overflow-x-auto gap-6 sm:gap-8 snap-x snap-mandatory hide-scrollbar pb-10 pt-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {products.map((product) => (
+            {displayProducts.map((product) => (
               <div key={product.id} className="min-w-[280px] sm:min-w-[320px] max-w-[320px] snap-center group">
                 <div className="relative h-[380px] rounded-2xl overflow-hidden mb-6 bg-gray-50 shadow-[0_10px_30px_rgba(0,0,0,0.05)] group-hover:shadow-[0_20px_40px_rgba(31,22,59,0.15)] group-hover:border group-hover:border-[#d4a54c]/50 transition-all duration-500">
                   {/* Image */}
@@ -127,7 +146,7 @@ export default function TrendingProducts() {
                       {product.badge}
                     </div>
                   )}
-
+ 
                   {/* Premium Glass Hover Overlay */}
                   <div className="absolute inset-0 bg-[#1f163b]/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4 z-20 px-6">
                     <a 
