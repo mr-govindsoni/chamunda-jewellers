@@ -13,19 +13,19 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: "Jaishree Jewellers | Ultra-Premium Luxury Jewellery",
-  description: "Experience the blend of traditional Rajputana royalty with modern luxury design at Jaishree Jewellers in Charwas, Churu, Rajasthan.",
+  title: "Argun Jewellers | Ultra-Premium Luxury Jewellery",
+  description: "Experience the blend of traditional Rajputana royalty with modern luxury design at Argun Jewellers in Charwas, Churu, Rajasthan.",
   openGraph: {
-    title: "Jaishree Jewellers | Ultra-Premium Luxury Jewellery",
-    description: "Discover the finest luxury jewellery collections, live market rates, and authentic Rajputana heritage at Jaishree Jewellers.",
-    url: "https://jaishreejewellers.com",
-    siteName: "Jaishree Jewellers",
+    title: "Argun Jewellers | Ultra-Premium Luxury Jewellery",
+    description: "Discover the finest luxury jewellery collections, live market rates, and authentic Rajputana heritage at Argun Jewellers.",
+    url: "https://argunjewellers.com",
+    siteName: "Argun Jewellers",
     images: [
       {
         url: "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
         width: 1200,
         height: 630,
-        alt: "Jaishree Jewellers Luxury Collection",
+        alt: "Argun Jewellers Luxury Collection",
       },
     ],
     locale: "en_IN",
@@ -36,11 +36,11 @@ export const metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "JewelryStore",
-  "name": "Jaishree Jewellers",
+  "name": "Argun Jewellers",
   "image": "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Jaishree Jewellers, Charwas",
+    "streetAddress": "Argun Jewellers, Charwas",
     "addressLocality": "Churu",
     "addressRegion": "Rajasthan",
     "postalCode": "331403",

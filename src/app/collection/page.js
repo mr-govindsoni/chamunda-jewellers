@@ -33,7 +33,7 @@ export default function CollectionPage() {
   }, [activeFilter, activeCollection, PRODUCTS]);
 
   const getWhatsAppLink = (product) => {
-    const text = `Hello Jaishree Jewellers, I want inquiry about this jewellery design: ${product.name} (${product.category}).`;
+    const text = `Hello Argun Jewellers, I want inquiry about this jewellery design: ${product.name} (${product.category}).`;
     return `https://wa.me/916367246095?text=${encodeURIComponent(text)}`;
   };
 

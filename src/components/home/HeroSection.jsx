@@ -77,7 +77,7 @@ export default function HeroSection() {
           }));
           setActiveSlides(formattedSlides);
         } else {
-          const local = localStorage.getItem('jaishree_banners');
+          const local = localStorage.getItem('argun_banners');
           if (local) {
             const parsed = JSON.parse(local).filter(b => b.is_active !== false);
             if (parsed.length > 0) {
@@ -100,7 +100,7 @@ export default function HeroSection() {
           }
         }
       } catch (err) {
-        const local = localStorage.getItem('jaishree_banners');
+        const local = localStorage.getItem('argun_banners');
         if (local) {
           const parsed = JSON.parse(local).filter(b => b.is_active !== false);
           if (parsed.length > 0) {

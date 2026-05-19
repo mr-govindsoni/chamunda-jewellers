@@ -25,7 +25,7 @@ export default function AdminLogin() {
 
       if (signInError) {
         // Fallback for demo purposes if Supabase is not configured yet
-        if (email === 'admin@jaishree.com' && password === 'admin123') {
+        if (email === 'admin@argun.com' && password === 'admin123') {
           sessionStorage.setItem('adminAuth', 'true');
           router.push('/admin/dashboard');
         } else {
@@ -35,7 +35,7 @@ export default function AdminLogin() {
         router.push('/admin/dashboard');
       }
     } catch (err) {
-      if (email === 'admin@jaishree.com' && password === 'admin123') {
+      if (email === 'admin@argun.com' && password === 'admin123') {
         sessionStorage.setItem('adminAuth', 'true');
         router.push('/admin/dashboard');
       } else {
@@ -60,7 +60,7 @@ export default function AdminLogin() {
           <div className="w-16 h-16 bg-white/5 border border-[#eebf63]/30 rounded-full flex items-center justify-center mx-auto mb-4">
             <ShieldCheck className="w-8 h-8 text-[#eebf63]" />
           </div>
-          <h1 className="text-2xl font-serif text-white tracking-widest uppercase mb-2">Jaishree Admin</h1>
+          <h1 className="text-2xl font-serif text-white tracking-widest uppercase mb-2">Argun Admin</h1>
           <p className="text-xs text-gray-400 font-light tracking-widest uppercase">Secure Portal Access</p>
         </div>
 
@@ -82,7 +82,7 @@ export default function AdminLogin() {
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="username"
                 className="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-[#eebf63]/50 transition-colors text-sm"
-                placeholder="admin@jaishree.com"
+                placeholder="admin@argun.com"
               />
             </div>
           </div>
@@ -114,7 +114,7 @@ export default function AdminLogin() {
 
         <div className="mt-8 text-center text-[10px] text-gray-500 uppercase tracking-widest">
           <p>Demo Credentials:</p>
-          <p className="mt-1">admin@jaishree.com / admin123</p>
+          <p className="mt-1">admin@argun.com / admin123</p>
         </div>
       </motion.div>
     </div>

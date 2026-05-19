@@ -72,7 +72,7 @@ const CraftsmanshipStory = () => {
             
             <div className="space-y-6 text-gray-600 font-light leading-relaxed">
               <p>
-                For over five decades, Jaishree Jewellers has been the custodian of Charwas’ royal jewellery-making traditions. Every piece in our collection is born from a legacy of uncompromising perfection.
+                For over five decades, Argun Jewellers has been the custodian of Charwas’ royal jewellery-making traditions. Every piece in our collection is born from a legacy of uncompromising perfection.
               </p>
               <p>
                 Our master artisans employ age-old techniques—from intricate Kundan-Polki settings to delicate Meenakari and Nakshi work—passing down their meticulous skills through generations. It is this dedication to handmade precision that transforms pure gold and flawless diamonds into timeless heirlooms.

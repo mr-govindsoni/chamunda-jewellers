@@ -6,7 +6,7 @@ export default function WhatsAppEnquiryButton({ productName, category, productCo
     e.stopPropagation(); // prevent card click triggers (like navigation to detail page)
     
     const phoneNumber = "916367246095";
-    const message = `Hello Jaishree Jewellers, I want enquiry about:\nProduct Name: ${productName}\nCategory: ${category || 'Jewellery'}\nProduct Code: ${productCode || 'CJ-' + Math.floor(1000 + Math.random() * 9000)}\nProduct Image Link: ${imageLink || ''}\nPlease share details.`;
+    const message = `Hello Argun Jewellers, I want enquiry about:\nProduct Name: ${productName}\nCategory: ${category || 'Jewellery'}\nProduct Code: ${productCode || 'CJ-' + Math.floor(1000 + Math.random() * 9000)}\nProduct Image Link: ${imageLink || ''}\nPlease share details.`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     

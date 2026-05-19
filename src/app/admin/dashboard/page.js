@@ -49,23 +49,23 @@ export default function AdminDashboard() {
       const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
       if (!error && data && data.length > 0) {
         setProducts(data);
-        localStorage.setItem('jaishree_products', JSON.stringify(data));
+        localStorage.setItem('argun_products', JSON.stringify(data));
       } else {
-        const local = localStorage.getItem('jaishree_products');
+        const local = localStorage.getItem('argun_products');
         if (local) {
           setProducts(JSON.parse(local));
         } else {
           setProducts(PRODUCTS);
-          localStorage.setItem('jaishree_products', JSON.stringify(PRODUCTS));
+          localStorage.setItem('argun_products', JSON.stringify(PRODUCTS));
         }
       }
     } catch (err) {
-      const local = localStorage.getItem('jaishree_products');
+      const local = localStorage.getItem('argun_products');
       if (local) {
         setProducts(JSON.parse(local));
       } else {
         setProducts(PRODUCTS);
-        localStorage.setItem('jaishree_products', JSON.stringify(PRODUCTS));
+        localStorage.setItem('argun_products', JSON.stringify(PRODUCTS));
       }
     } finally {
       setIsLoading(false);
@@ -179,14 +179,14 @@ export default function AdminDashboard() {
         if (error) throw error;
         const updated = products.map(p => String(p.id) === String(editProduct.id) ? { ...p, ...payload } : p);
         setProducts(updated);
-        localStorage.setItem('jaishree_products', JSON.stringify(updated));
+        localStorage.setItem('argun_products', JSON.stringify(updated));
       } else {
         const { data, error } = await supabase.from('products').insert([payload]).select();
         if (error) throw error;
         if (data) {
           const updated = [data[0], ...products];
           setProducts(updated);
-          localStorage.setItem('jaishree_products', JSON.stringify(updated));
+          localStorage.setItem('argun_products', JSON.stringify(updated));
         }
       }
     } catch (err) {
@@ -198,7 +198,7 @@ export default function AdminDashboard() {
         updated = [{ id: Date.now(), ...payload }, ...products];
       }
       setProducts(updated);
-      localStorage.setItem('jaishree_products', JSON.stringify(updated));
+      localStorage.setItem('argun_products', JSON.stringify(updated));
     } finally {
       setIsLoading(false);
       setIsModalOpen(false);
@@ -211,11 +211,11 @@ export default function AdminDashboard() {
       await supabase.from('products').delete().eq('id', id);
       const updated = products.filter(p => p.id !== id);
       setProducts(updated);
-      localStorage.setItem('jaishree_products', JSON.stringify(updated));
+      localStorage.setItem('argun_products', JSON.stringify(updated));
     } catch (err) {
       const updated = products.filter(p => p.id !== id);
       setProducts(updated);
-      localStorage.setItem('jaishree_products', JSON.stringify(updated));
+      localStorage.setItem('argun_products', JSON.stringify(updated));
     }
   };
 
@@ -233,7 +233,7 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-3">
               <ShieldCheck className="w-6 h-6 text-[#eebf63]" />
               <div>
-                <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Jaishree Admin</h1>
+                <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Argun Admin</h1>
                 <p className="text-[10px] text-gray-400 tracking-wider">Luxury Jewellery Management</p>
               </div>
             </div>

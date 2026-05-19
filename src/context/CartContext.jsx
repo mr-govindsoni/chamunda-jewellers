@@ -27,24 +27,24 @@ export function CartProvider({ children }) {
       const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
       if (!error && data && data.length > 0) {
         setPRODUCTS(data);
-        localStorage.setItem('jaishree_products', JSON.stringify(data));
+        localStorage.setItem('argun_products', JSON.stringify(data));
       } else {
-        const local = localStorage.getItem('jaishree_products');
+        const local = localStorage.getItem('argun_products');
         if (local) {
           setPRODUCTS(JSON.parse(local));
         } else {
           setPRODUCTS(DEFAULT_PRODUCTS);
-          localStorage.setItem('jaishree_products', JSON.stringify(DEFAULT_PRODUCTS));
+          localStorage.setItem('argun_products', JSON.stringify(DEFAULT_PRODUCTS));
         }
       }
     } catch (err) {
       console.error("Supabase not fully configured yet, using default products.", err);
-      const local = localStorage.getItem('jaishree_products');
+      const local = localStorage.getItem('argun_products');
       if (local) {
         setPRODUCTS(JSON.parse(local));
       } else {
         setPRODUCTS(DEFAULT_PRODUCTS);
-        localStorage.setItem('jaishree_products', JSON.stringify(DEFAULT_PRODUCTS));
+        localStorage.setItem('argun_products', JSON.stringify(DEFAULT_PRODUCTS));
       }
     }
   };
@@ -107,8 +107,8 @@ export function CartProvider({ children }) {
 
   // Generate WhatsApp inquiry text for all items in the cart
   const getWhatsAppInquiryText = () => {
-    let text = "✨ *Jaishree Jewellers - Royal Order Inquiry* ✨\n\n";
-    text += "Hello Jaishree Jewellers team, I would like to get a quote and details for the following selected luxury pieces:\n\n";
+    let text = "✨ *Argun Jewellers - Royal Order Inquiry* ✨\n\n";
+    text += "Hello Argun Jewellers team, I would like to get a quote and details for the following selected luxury pieces:\n\n";
     cart.forEach((item, index) => {
       text += `${index + 1}. *${item.name}* (${item.quantity} units)\n`;
       text += `   - Code: ${item.code}\n`;

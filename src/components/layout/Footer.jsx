@@ -38,7 +38,7 @@ export default function Footer() {
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none drop-shadow-md">Jaishree</h2>
+                <h2 className="text-2xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none drop-shadow-md">Argun</h2>
                 <p className="text-[11px] text-gray-400 uppercase tracking-[0.25em] mt-1.5 font-medium">Jewellers</p>
                 <p className="text-[8px] text-[#eebf63]/60 uppercase tracking-wider mt-1.5 font-semibold">
                   Made by Govind Soni • 9376406174, 8764274110
@@ -112,7 +112,7 @@ export default function Footer() {
                   rel="noopener noreferrer" 
                   className="text-sm text-gray-300 font-light mt-1 leading-relaxed tracking-wide hover:text-[#eebf63] transition-colors"
                 >
-                  Jaishree Jewellers, Charwas,<br />
+                  Argun Jewellers, Charwas,<br />
                   Churu, Rajasthan - 331403
                 </a>
               </div>
@@ -159,7 +159,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500 font-light tracking-widest uppercase">
-          <p>© 2026 Jaishree Jewellers. All Rights Reserved.</p>
+          <p>© 2026 Argun Jewellers. All Rights Reserved.</p>
           <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
             <span>Powered by</span>
             <span className="text-white font-bold tracking-[0.2em] text-[#eebf63]">AIGENZ</span>

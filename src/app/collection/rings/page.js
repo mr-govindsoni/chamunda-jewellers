@@ -214,7 +214,7 @@ export default function RingsPage() {
   const handleWhatsAppEnquiry = (e, product) => {
     e.stopPropagation();
     const phoneNumber = "916367246095";
-    const message = `Hello Jaishree Jewellers, I want enquiry about this ring design.\n\nProduct Name: ${product.name}\nProduct Code: ${product.code}\nImage Link: ${window.location.origin}${product.image}`;
+    const message = `Hello Argun Jewellers, I want enquiry about this ring design.\n\nProduct Name: ${product.name}\nProduct Code: ${product.code}\nImage Link: ${window.location.origin}${product.image}`;
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
   };
@@ -225,7 +225,7 @@ export default function RingsPage() {
     if (navigator.share) {
       navigator.share({
         title: product.name,
-        text: `Explore ${product.name} at Jaishree Jewellers`,
+        text: `Explore ${product.name} at Argun Jewellers`,
         url: shareUrl,
       }).catch(err => console.log(err));
     } else {

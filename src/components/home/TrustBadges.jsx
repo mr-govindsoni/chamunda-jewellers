@@ -51,7 +51,7 @@ const TrustBadges = () => {
             viewport={{ once: true }}
             className="text-[10px] text-[#eebf63] uppercase tracking-[0.3em] font-bold mb-4"
           >
-            The Jaishree Promise
+            The Argun Promise
           </motion.p>
           <motion.h2 
             initial={{ opacity: 0, y: 10 }}

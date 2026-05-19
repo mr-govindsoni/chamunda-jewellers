@@ -178,7 +178,7 @@ export default function LiveRatesPage() {
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a 
-                  href="https://wa.me/916367246095?text=Hello%20Jaishree%20Jewellers,%20I%20would%20like%20to%20lock%20in%20today's%20live%20rate%20for%20my%20purchase"
+                  href="https://wa.me/916367246095?text=Hello%20Argun%20Jewellers,%20I%20would%20like%20to%20lock%20in%20today's%20live%20rate%20for%20my%20purchase"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto px-8 py-4 bg-[#1f163b] text-white hover:bg-[#D4AF37] hover:text-[#1f163b] rounded-xl font-bold text-xs uppercase tracking-widest transition-colors duration-500 flex items-center justify-center gap-2 shadow-lg"

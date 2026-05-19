@@ -85,7 +85,7 @@ export default function SearchOverlay() {
   };
 
   const getWhatsAppLink = (product) => {
-    const text = `Hello Jaishree Jewellers, I'm interested in the ${product.name} (Code: ${product.code}). Please share more details and pricing.`;
+    const text = `Hello Argun Jewellers, I'm interested in the ${product.name} (Code: ${product.code}). Please share more details and pricing.`;
     return `https://wa.me/916367246095?text=${encodeURIComponent(text)}`;
   };
 
@@ -101,7 +101,7 @@ export default function SearchOverlay() {
       {/* Header */}
       <div className="max-w-[1400px] mx-auto w-full px-6 py-6 md:px-8 flex items-center justify-between border-b border-white/10 shrink-0">
         <div className="flex flex-col select-none">
-          <h2 className="text-xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none">Jaishree</h2>
+          <h2 className="text-xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none">Argun</h2>
           <p className="text-[8px] text-gray-400 uppercase tracking-[0.25em] mt-1 font-bold">Jewellers</p>
         </div>
 

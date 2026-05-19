@@ -1,4 +1,4 @@
--- Supabase Setup Script for Jaishree Jewellers
+-- Supabase Setup Script for Argun Jewellers
 -- Run this in your Supabase SQL Editor to create the products table
 
 -- 1. Create the products table

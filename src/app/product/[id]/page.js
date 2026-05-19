@@ -41,7 +41,7 @@ export default function ProductDetailPage({ params }) {
     if (navigator.share) {
       navigator.share({
         title: product.name,
-        text: `Check out this gorgeous ${product.name} at Jaishree Jewellers!`,
+        text: `Check out this gorgeous ${product.name} at Argun Jewellers!`,
         url: window.location.href,
       }).catch(err => console.log(err));
     } else {
@@ -240,7 +240,7 @@ export default function ProductDetailPage({ params }) {
       {/* Sticky Mobile Enquire Button */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-gray-100 z-50 sm:hidden">
         <a 
-          href={`https://wa.me/916367246095?text=Hello%20Jaishree%20Jewellers,%20I%20am%20interested%20in%20product%20${product.code}`}
+          href={`https://wa.me/916367246095?text=Hello%20Argun%20Jewellers,%20I%20am%20interested%20in%20product%20${product.code}`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2.5 shadow-lg transition-colors"
