@@ -40,6 +40,9 @@ export default function Footer() {
               <div>
                 <h2 className="text-2xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none drop-shadow-md">Chamunda</h2>
                 <p className="text-[11px] text-gray-400 uppercase tracking-[0.25em] mt-1.5 font-medium">Jewellers</p>
+                <p className="text-[8px] text-[#eebf63]/60 uppercase tracking-wider mt-1.5 font-semibold">
+                  Made by Govind Soni • 9376406174, 8764274110
+                </p>
               </div>
             </div>
             {/* Elegant Legacy / About Us Section */}

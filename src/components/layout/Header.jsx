@@ -105,6 +105,9 @@ export default function Header() {
               <p className="text-[8px] text-[#d4a54c] uppercase tracking-[0.2em] mt-1.5 font-bold leading-none select-none">
                 Jewellers
               </p>
+              <p className="text-[5.5px] text-gray-400 uppercase tracking-wider mt-1 font-semibold leading-none select-none">
+                Made by Govind Soni • 9376406174, 8764274110
+              </p>
             </Link>
           </div>
 
@@ -162,6 +165,9 @@ export default function Header() {
                 </div>
                 <p className="text-[8px] text-gray-500 uppercase tracking-widest mt-1">
                   Charwas, Churu, Rajasthan
+                </p>
+                <p className="text-[7.5px] text-[#3a225e]/60 font-semibold uppercase tracking-wider mt-1 select-none">
+                  Made by Govind Soni • 9376406174, 8764274110
                 </p>
               </div>
             </Link>
@@ -338,6 +344,9 @@ export default function Header() {
           <div className="flex flex-col items-center select-none text-center">
             <h2 className="text-2xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none">Chamunda</h2>
             <p className="text-[9px] text-gray-400 uppercase tracking-[0.25em] mt-2 font-bold">Jewellers</p>
+            <p className="text-[7.5px] text-[#eebf63]/60 uppercase tracking-wider mt-1.5 font-semibold">
+              Made by Govind Soni • 9376406174, 8764274110
+            </p>
           </div>
 
           {/* Right: Circular glass close button with gold icons & hover glow */}
