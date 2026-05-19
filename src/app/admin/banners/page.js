@@ -127,23 +127,23 @@ export default function BannerManagement() {
       const { data, error } = await supabase.from('hero_banners').select('*').order('display_order', { ascending: true });
       if (!error && data && data.length > 0) {
         setBanners(data);
-        localStorage.setItem('chamunda_banners', JSON.stringify(data));
+        localStorage.setItem('jaishree_banners', JSON.stringify(data));
       } else {
-        const local = localStorage.getItem('chamunda_banners');
+        const local = localStorage.getItem('jaishree_banners');
         if (local) {
           setBanners(JSON.parse(local));
         } else {
           setBanners(DEFAULT_BANNERS);
-          localStorage.setItem('chamunda_banners', JSON.stringify(DEFAULT_BANNERS));
+          localStorage.setItem('jaishree_banners', JSON.stringify(DEFAULT_BANNERS));
         }
       }
     } catch (err) {
-      const local = localStorage.getItem('chamunda_banners');
+      const local = localStorage.getItem('jaishree_banners');
       if (local) {
         setBanners(JSON.parse(local));
       } else {
         setBanners(DEFAULT_BANNERS);
-        localStorage.setItem('chamunda_banners', JSON.stringify(DEFAULT_BANNERS));
+        localStorage.setItem('jaishree_banners', JSON.stringify(DEFAULT_BANNERS));
       }
     } finally {
       setIsLoading(false);
@@ -201,14 +201,14 @@ export default function BannerManagement() {
         if (error) throw error;
         const updated = banners.map(b => String(b.id) === String(editBanner.id) ? { ...b, ...payload } : b).sort((a,b) => a.display_order - b.display_order);
         setBanners(updated);
-        localStorage.setItem('chamunda_banners', JSON.stringify(updated));
+        localStorage.setItem('jaishree_banners', JSON.stringify(updated));
       } else {
         const { data, error } = await supabase.from('hero_banners').insert([payload]).select();
         if (error) throw error;
         if (data) {
           const updated = [...banners, data[0]].sort((a,b) => a.display_order - b.display_order);
           setBanners(updated);
-          localStorage.setItem('chamunda_banners', JSON.stringify(updated));
+          localStorage.setItem('jaishree_banners', JSON.stringify(updated));
         }
       }
     } catch (err) {
@@ -220,7 +220,7 @@ export default function BannerManagement() {
         updated = [...banners, { id: Date.now(), ...payload }].sort((a,b) => a.display_order - b.display_order);
       }
       setBanners(updated);
-      localStorage.setItem('chamunda_banners', JSON.stringify(updated));
+      localStorage.setItem('jaishree_banners', JSON.stringify(updated));
     } finally {
       setIsLoading(false);
       setIsModalOpen(false);
@@ -233,11 +233,11 @@ export default function BannerManagement() {
       await supabase.from('hero_banners').delete().eq('id', id);
       const updated = banners.filter(b => b.id !== id);
       setBanners(updated);
-      localStorage.setItem('chamunda_banners', JSON.stringify(updated));
+      localStorage.setItem('jaishree_banners', JSON.stringify(updated));
     } catch (err) {
       const updated = banners.filter(b => b.id !== id);
       setBanners(updated);
-      localStorage.setItem('chamunda_banners', JSON.stringify(updated));
+      localStorage.setItem('jaishree_banners', JSON.stringify(updated));
     }
   };
 
@@ -289,7 +289,7 @@ export default function BannerManagement() {
             <div className="flex items-center gap-3">
               <ShieldCheck className="w-6 h-6 text-[#eebf63]" />
               <div>
-                <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Chamunda Admin</h1>
+                <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Jaishree Admin</h1>
                 <p className="text-[10px] text-gray-400 tracking-wider">Luxury Jewellery Management</p>
               </div>
             </div>

@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Admin Dashboard | Chamunda Jewellers',
-  description: 'Secure admin portal for Chamunda Jewellers',
+  title: 'Admin Dashboard | Jaishree Jewellers',
+  description: 'Secure admin portal for Jaishree Jewellers',
 };
 
 export default function AdminLayout({ children }) {

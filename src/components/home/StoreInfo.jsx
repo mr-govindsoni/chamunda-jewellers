@@ -50,7 +50,7 @@ export default function StoreInfo() {
                   <MapPin className="w-5 h-5 text-[#eebf63] group-hover/item:text-[#1f163b] transition-colors" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-white tracking-wide">Chamunda Jewellers</h4>
+                  <h4 className="font-semibold text-white tracking-wide">Jaishree Jewellers</h4>
                   <p className="text-sm text-gray-300 mt-1.5 leading-relaxed font-light">Charwas, Churu,<br />Rajasthan - 331403, India</p>
                 </div>
               </li>

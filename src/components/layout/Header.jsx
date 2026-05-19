@@ -100,7 +100,7 @@ export default function Header() {
           <div className="flex justify-center items-center">
             <Link href="/" className="flex flex-col items-center">
               <h1 className="text-xl font-serif text-[#1f163b] font-medium tracking-[0.12em] uppercase leading-none drop-shadow-sm select-none">
-                Chamunda
+                Jaishree
               </h1>
               <p className="text-[8px] text-[#d4a54c] uppercase tracking-[0.2em] mt-1.5 font-bold leading-none select-none">
                 Jewellers
@@ -154,7 +154,7 @@ export default function Header() {
               </div>
               <div className="text-center flex flex-col items-center">
                 <h1 className="text-xl md:text-2xl font-serif text-[#1f163b] font-medium tracking-[0.15em] uppercase leading-none">
-                  Chamunda
+                  Jaishree
                 </h1>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="w-8 h-[1px] bg-[#d4a54c] group-hover:w-10 transition-all duration-500"></div>
@@ -342,7 +342,7 @@ export default function Header() {
 
           {/* Centered Large Luxury Logo */}
           <div className="flex flex-col items-center select-none text-center">
-            <h2 className="text-2xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none">Chamunda</h2>
+            <h2 className="text-2xl font-serif text-[#eebf63] font-medium tracking-[0.15em] uppercase leading-none">Jaishree</h2>
             <p className="text-[9px] text-gray-400 uppercase tracking-[0.25em] mt-2 font-bold">Jewellers</p>
             <p className="text-[7.5px] text-[#eebf63]/60 uppercase tracking-wider mt-1.5 font-semibold">
               Made by Govind Soni • 9376406174, 8764274110

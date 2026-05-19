@@ -42,7 +42,7 @@ export default function OffersSection() {
 
   const handleClaimOffer = () => {
     const offer = offers[currentOffer];
-    const message = `Hello Chamunda Jewellers, I would like to claim this exclusive offer:\n\n*${offer.title}*\n${offer.subtitle}\n_${offer.validity}_`;
+    const message = `Hello Jaishree Jewellers, I would like to claim this exclusive offer:\n\n*${offer.title}*\n${offer.subtitle}\n_${offer.validity}_`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/916367246095?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');

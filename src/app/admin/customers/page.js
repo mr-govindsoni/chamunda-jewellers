@@ -67,7 +67,7 @@ export default function CustomersManagement() {
             <div className="flex items-center gap-3">
               <ShieldCheck className="w-6 h-6 text-[#eebf63]" />
               <div>
-                <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Chamunda Admin</h1>
+                <h1 className="font-serif text-lg tracking-widest uppercase text-[#eebf63]">Jaishree Admin</h1>
                 <p className="text-[10px] text-gray-400 tracking-wider">Luxury Jewellery Management</p>
               </div>
             </div>

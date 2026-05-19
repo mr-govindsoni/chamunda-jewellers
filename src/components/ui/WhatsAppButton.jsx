@@ -3,7 +3,7 @@ import { MessageCircle } from 'lucide-react';
 
 export default function WhatsAppButton() {
   const phoneNumber = "916367246095"; // +91 6367246095
-  const message = "Hello Chamunda Jewellers! I would like to inquire about...";
+  const message = "Hello Jaishree Jewellers! I would like to inquire about...";
 
   const handleClick = () => {
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');

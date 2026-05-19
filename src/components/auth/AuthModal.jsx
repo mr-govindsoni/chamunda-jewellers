@@ -124,7 +124,7 @@ export default function AuthModal() {
 
           <div className="p-8 sm:p-10 relative z-10">
             <div className="text-center mb-8">
-              <h2 className="font-serif text-3xl text-[#eebf63] tracking-wide mb-2">Chamunda</h2>
+              <h2 className="font-serif text-3xl text-[#eebf63] tracking-wide mb-2">Jaishree</h2>
               <p className="text-[10px] text-gray-400 uppercase tracking-[0.3em] font-bold">Client Portal</p>
             </div>
 
@@ -179,7 +179,7 @@ export default function AuthModal() {
                   </div>
 
                   <p className="mt-8 text-center text-xs text-gray-400">
-                    New to Chamunda? <button type="button" onClick={() => setView('signup')} className="text-[#d4a54c] hover:text-white transition-colors ml-1">Create an account</button>
+                    New to Jaishree? <button type="button" onClick={() => setView('signup')} className="text-[#d4a54c] hover:text-white transition-colors ml-1">Create an account</button>
                   </p>
                 </motion.form>
               )}
@@ -319,8 +319,8 @@ export default function AuthModal() {
                       <button 
                         onClick={() => handleGoogleSelect({
                           id: 'google-2',
-                          email: 'royal.client@chamunda.com',
-                          full_name: 'Chamunda Royal Client',
+                          email: 'royal.client@jaishree.com',
+                          full_name: 'Jaishree Royal Client',
                           avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop'
                         })}
                         className="w-full p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-[#d4a54c]/30 text-left flex items-center gap-3.5 transition-all"
@@ -329,8 +329,8 @@ export default function AuthModal() {
                           <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" className="w-full h-full object-cover" />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-white leading-none mb-1">Chamunda Royal Client</p>
-                          <p className="text-[10px] text-gray-400">royal.client@chamunda.com</p>
+                          <p className="text-sm font-bold text-white leading-none mb-1">Jaishree Royal Client</p>
+                          <p className="text-[10px] text-gray-400">royal.client@jaishree.com</p>
                         </div>
                       </button>
 
@@ -411,7 +411,7 @@ export default function AuthModal() {
                   >
                     <CheckCircle2 className="w-16 h-16 text-[#eebf63] mb-6 drop-shadow-[0_0_15px_rgba(238,191,99,0.5)]" />
                   </motion.div>
-                  <h3 className="text-xl font-serif text-white mb-2">Welcome to Chamunda</h3>
+                  <h3 className="text-xl font-serif text-white mb-2">Welcome to Jaishree</h3>
                   <p className="text-gray-400 text-sm">Securely logging you in...</p>
                 </motion.div>
               )}

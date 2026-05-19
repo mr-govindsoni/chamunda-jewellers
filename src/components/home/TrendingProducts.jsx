@@ -150,7 +150,7 @@ export default function TrendingProducts() {
                   {/* Premium Glass Hover Overlay */}
                   <div className="absolute inset-0 bg-[#1f163b]/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4 z-20 px-6">
                     <a 
-                      href={`https://wa.me/916367246095?text=${encodeURIComponent(`Hello Chamunda Jewellers, I want inquiry about this jewellery design: ${product.name} (${product.category}).`)}`}
+                      href={`https://wa.me/916367246095?text=${encodeURIComponent(`Hello Jaishree Jewellers, I want inquiry about this jewellery design: ${product.name} (${product.category}).`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full bg-[#25D366] text-white py-3 rounded-full flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest hover:bg-[#20ba5a] transition-colors shadow-[0_0_20px_rgba(37,211,102,0.4)] transform translate-y-4 group-hover:translate-y-0 duration-500"

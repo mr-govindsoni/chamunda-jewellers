@@ -13,19 +13,19 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: "Chamunda Jewellers | Ultra-Premium Luxury Jewellery",
-  description: "Experience the blend of traditional Rajputana royalty with modern luxury design at Chamunda Jewellers in Charwas, Churu, Rajasthan.",
+  title: "Jaishree Jewellers | Ultra-Premium Luxury Jewellery",
+  description: "Experience the blend of traditional Rajputana royalty with modern luxury design at Jaishree Jewellers in Charwas, Churu, Rajasthan.",
   openGraph: {
-    title: "Chamunda Jewellers | Ultra-Premium Luxury Jewellery",
-    description: "Discover the finest luxury jewellery collections, live market rates, and authentic Rajputana heritage at Chamunda Jewellers.",
-    url: "https://chamundajewellers.com",
-    siteName: "Chamunda Jewellers",
+    title: "Jaishree Jewellers | Ultra-Premium Luxury Jewellery",
+    description: "Discover the finest luxury jewellery collections, live market rates, and authentic Rajputana heritage at Jaishree Jewellers.",
+    url: "https://jaishreejewellers.com",
+    siteName: "Jaishree Jewellers",
     images: [
       {
         url: "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
         width: 1200,
         height: 630,
-        alt: "Chamunda Jewellers Luxury Collection",
+        alt: "Jaishree Jewellers Luxury Collection",
       },
     ],
     locale: "en_IN",
@@ -36,11 +36,11 @@ export const metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "JewelryStore",
-  "name": "Chamunda Jewellers",
+  "name": "Jaishree Jewellers",
   "image": "https://images.unsplash.com/photo-1599643478524-fb66f70d00f0?q=80&w=1200&auto=format&fit=crop",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Chamunda Jewellers, Charwas",
+    "streetAddress": "Jaishree Jewellers, Charwas",
     "addressLocality": "Churu",
     "addressRegion": "Rajasthan",
     "postalCode": "331403",
